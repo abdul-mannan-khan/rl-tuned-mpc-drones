@@ -1,0 +1,65 @@
+{
+  "simulator": "PyBullet",
+  "test_date": "2025-11-20T13:47:38.213228",
+  "tests": {
+    "basic_flight": {
+      "status": "ERROR",
+      "hover_stability": null,
+      "waypoint_tracking": null,
+      "errors": [
+        "too many indices for array: array is 1-dimensional, but 2 were indexed"
+      ]
+    },
+    "physics_accuracy": {
+      "status": "ERROR",
+      "free_fall": null,
+      "thrust_response": null,
+      "errors": [
+        "too many indices for array: array is 1-dimensional, but 2 were indexed"
+      ]
+    },
+    "computational_speed": {
+      "status": "ERROR",
+      "real_time_factor": null,
+      "errors": [
+        "too many indices for array: array is 1-dimensional, but 2 were indexed"
+      ]
+    },
+    "state_access": {
+      "status": "ERROR",
+      "states_accessible": {
+        "position_x": true,
+        "position_y": true,
+        "position_z": true,
+        "velocity_x": true,
+        "velocity_y": true,
+        "velocity_z": true,
+        "angular_vel_x": true,
+        "angular_vel_y": true,
+        "angular_vel_z": true,
+        "roll": true,
+        "pitch": true,
+        "yaw": true
+      },
+      "update_frequency": null,
+      "errors": [
+        "too many indices for array: array is 1-dimensional, but 2 were indexed"
+      ]
+    },
+    "control_interface": {
+      "status": "ERROR",
+      "command_response": "FAIL",
+      "response_time": null,
+      "errors": [
+        "too many indices for array: array is 1-dimensional, but 2 were indexed"
+      ]
+    },
+    "visualization": {
+      "status": "PASS",
+      "gui_available": "NO",
+      "rendering": "FAIL",
+      "errors": []
+    }
+  },
+  "overall_status": "FAIL"
+}

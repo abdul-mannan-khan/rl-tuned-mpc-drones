@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Figure 3: Transfer Learning Flow</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <svg width="900" height="1200" xmlns="http://www.w3.org/2000/svg">
+            <!-- Title -->
+            <text x="450" y="30" font-size="20" font-weight="bold" text-anchor="middle" fill="#333">
+                Sequential Transfer Learning Across UAV Platforms
+            </text>
+
+            <!-- Definitions for arrows -->
+            <defs>
+                <marker id="arrow-blue" markerWidth="12" markerHeight="12" refX="11" refY="6" orient="auto">
+                    <polygon points="0 0, 12 6, 0 12" fill="#1976D2" />
+                </marker>
+                <marker id="arrow-green" markerWidth="12" markerHeight="12" refX="11" refY="6" orient="auto">
+                    <polygon points="0 0, 12 6, 0 12" fill="#388E3C" />
+                </marker>
+            </defs>
+
+            <!-- Phase 1: Crazyflie -->
+            <g id="phase1">
+                <rect x="100" y="70" width="700" height="180" rx="12" fill="#BBDEFB" stroke="#1976D2" stroke-width="4"/>
+                <text x="450" y="100" font-size="16" font-weight="bold" text-anchor="middle" fill="#0D47A1">
+                    Phase 1: Base Training
+                </text>
+                <rect x="130" y="115" width="640" height="120" rx="8" fill="#E3F2FD" stroke="#1976D2" stroke-width="2"/>
+                <text x="450" y="145" font-size="15" font-weight="bold" text-anchor="middle" fill="#0D47A1">
+                    Crazyflie 2.X (0.027 kg)
+                </text>
+                <text x="230" y="175" font-size="13" text-anchor="start" fill="#333">
+                    <tspan x="230" dy="0" font-weight="bold">Training Configuration:</tspan>
+                    <tspan x="230" dy="20">• Steps: 20,000</tspan>
+                    <tspan x="230" dy="18">• Learning rate: 3×10⁻⁴</tspan>
+                </text>
+                <text x="550" y="175" font-size="13" text-anchor="start" fill="#333">
+                    <tspan x="550" dy="0">• Time: 200 minutes</tspan>
+                    <tspan x="550" dy="18">• Status: <tspan font-weight="bold" fill="#D32F2F">From scratch</tspan></tspan>
+                </text>
+            </g>
+
+            <!-- Arrow 1 -->
+            <line x1="450" y1="250" x2="450" y2="290" stroke="#1976D2" stroke-width="5" marker-end="url(#arrow-blue)"/>
+            <text x="520" y="275" font-size="14" font-weight="bold" fill="#1976D2">
+                Transfer: Policy + Value Network →
+            </text>
+
+            <!-- Phase 2: Racing Drone -->
+            <g id="phase2">
+                <rect x="100" y="290" width="700" height="180" rx="12" fill="#90CAF9" stroke="#1976D2" stroke-width="4"/>
+                <text x="450" y="320" font-size="16" font-weight="bold" text-anchor="middle" fill="#0D47A1">
+                    Phase 2: Fine-Tuning
+                </text>
+                <rect x="130" y="335" width="640" height="120" rx="8" fill="#BBDEFB" stroke="#1976D2" stroke-width="2"/>
+                <text x="450" y="365" font-size="15" font-weight="bold" text-anchor="middle" fill="#0D47A1">
+                    Racing Drone (0.800 kg)
+                </text>
+                <text x="230" y="395" font-size="13" text-anchor="start" fill="#333">
+                    <tspan x="230" dy="0" font-weight="bold">Fine-Tuning Configuration:</tspan>
+                    <tspan x="230" dy="20">• Steps: 5,000 (25% of base)</tspan>
+                    <tspan x="230" dy="18">• Learning rate: 3×10⁻⁵</tspan>
+                </text>
+                <text x="550" y="395" font-size="13" text-anchor="start" fill="#333">
+                    <tspan x="550" dy="0">• Time: 52 minutes</tspan>
+                    <tspan x="550" dy="18">• From: <tspan font-weight="bold" fill="#1976D2">Crazyflie</tspan></tspan>
+                </text>
+            </g>
+
+            <!-- Arrow 2 -->
+            <line x1="450" y1="470" x2="450" y2="510" stroke="#1976D2" stroke-width="5" marker-end="url(#arrow-blue)"/>
+            <text x="520" y="495" font-size="14" font-weight="bold" fill="#1976D2">
+                Transfer: Policy + Value Network →
+            </text>
+
+            <!-- Phase 3: Generic Quad -->
+            <g id="phase3">
+                <rect x="100" y="510" width="700" height="180" rx="12" fill="#64B5F6" stroke="#1976D2" stroke-width="4"/>
+                <text x="450" y="540" font-size="16" font-weight="bold" text-anchor="middle" fill="#0D47A1">
+                    Phase 3: Fine-Tuning
+                </text>
+                <rect x="130" y="555" width="640" height="120" rx="8" fill="#90CAF9" stroke="#1976D2" stroke-width="2"/>
+                <text x="450" y="585" font-size="15" font-weight="bold" text-anchor="middle" fill="#0D47A1">
+                    Generic Quadrotor (2.500 kg)
+                </text>
+                <text x="230" y="615" font-size="13" text-anchor="start" fill="#333">
+                    <tspan x="230" dy="0" font-weight="bold">Fine-Tuning Configuration:</tspan>
+                    <tspan x="230" dy="20">• Steps: 5,000 (25% of base)</tspan>
+                    <tspan x="230" dy="18">• Learning rate: 3×10⁻⁵</tspan>
+                </text>
+                <text x="550" y="615" font-size="13" text-anchor="start" fill="#333">
+                    <tspan x="550" dy="0">• Time: 52 minutes</tspan>
+                    <tspan x="550" dy="18">• From: <tspan font-weight="bold" fill="#1976D2">Racing</tspan></tspan>
+                </text>
+            </g>
+
+            <!-- Arrow 3 -->
+            <line x1="450" y1="690" x2="450" y2="730" stroke="#1976D2" stroke-width="5" marker-end="url(#arrow-blue)"/>
+            <text x="520" y="715" font-size="14" font-weight="bold" fill="#1976D2">
+                Transfer: Policy + Value Network →
+            </text>
+
+            <!-- Phase 4: Heavy-Lift -->
+            <g id="phase4">
+                <rect x="100" y="730" width="700" height="180" rx="12" fill="#42A5F5" stroke="#1976D2" stroke-width="4"/>
+                <text x="450" y="760" font-size="16" font-weight="bold" text-anchor="middle" fill="#0D47A1">
+                    Phase 4: Fine-Tuning
+                </text>
+                <rect x="130" y="775" width="640" height="120" rx="8" fill="#64B5F6" stroke="#1976D2" stroke-width="2"/>
+                <text x="450" y="805" font-size="15" font-weight="bold" text-anchor="middle" fill="#0D47A1">
+                    Heavy-Lift Hexarotor (5.500 kg)
+                </text>
+                <text x="230" y="835" font-size="13" text-anchor="start" fill="#333">
+                    <tspan x="230" dy="0" font-weight="bold">Fine-Tuning Configuration:</tspan>
+                    <tspan x="230" dy="20">• Steps: 5,000 (25% of base)</tspan>
+                    <tspan x="230" dy="18">• Learning rate: 3×10⁻⁵</tspan>
+                </text>
+                <text x="550" y="835" font-size="13" text-anchor="start" fill="#333">
+                    <tspan x="550" dy="0">• Time: 59 minutes</tspan>
+                    <tspan x="550" dy="18">• From: <tspan font-weight="bold" fill="#1976D2">Generic</tspan></tspan>
+                </text>
+            </g>
+
+            <!-- Arrow 4 to Summary -->
+            <line x1="450" y1="910" x2="450" y2="950" stroke="#388E3C" stroke-width="5" marker-end="url(#arrow-green)"/>
+
+            <!-- Summary Box -->
+            <g id="summary">
+                <rect x="100" y="950" width="700" height="200" rx="12" fill="#C8E6C9" stroke="#388E3C" stroke-width="4"/>
+                <text x="450" y="985" font-size="18" font-weight="bold" text-anchor="middle" fill="#1B5E20">
+                    Summary: Efficiency Gains
+                </text>
+                <text x="450" y="1020" font-size="14" text-anchor="middle" fill="#333">
+                    <tspan x="450" dy="0" font-weight="bold" fill="#D32F2F">Without Transfer Learning:</tspan>
+                    <tspan x="450" dy="22">Total: 80,000 steps, 828 minutes (13.8 hours)</tspan>
+
+                    <tspan x="450" dy="30" font-weight="bold" fill="#1B5E20">With Sequential Transfer:</tspan>
+                    <tspan x="450" dy="22">Total: 35,000 steps, 363 minutes (6.1 hours)</tspan>
+
+                    <tspan x="450" dy="30" font-weight="bold" fill="#1565C0">Savings:</tspan>
+                    <tspan x="450" dy="22">✓ 75% reduction in training steps  ✓ 56.2% time savings  ✓ 1.34±0.01m RMSE</tspan>
+                </text>
+            </g>
+
+            <!-- Side Note -->
+            <g id="note">
+                <rect x="50" y="1170" width="800" height="25" rx="5" fill="#FFF9C4" stroke="#F57C00" stroke-width="2"/>
+                <text x="450" y="1188" font-size="12" text-anchor="middle" fill="#E65100" font-weight="bold">
+                    Platform Range: 200× mass variation (0.027 → 5.5 kg) | 6000× inertia variation | Full heterogeneity
+                </text>
+            </g>
+        </svg>
+    </div>
+
+    <script>
+        console.log("To save as image:");
+        console.log("1. Press Ctrl+P (Print)");
+        console.log("2. Select 'Save as PDF'");
+        console.log("3. Save as 'transfer_learning_flow.pdf'");
+    </script>
+</body>
+</html>

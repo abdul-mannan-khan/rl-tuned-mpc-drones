@@ -1,0 +1,52 @@
+@startuml
+skinparam componentStyle rectangle
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam ArrowThickness 2
+
+title System Architecture: RL-Enhanced MPC Framework
+
+package "RL Optimizer (PPO)" #E3F2FD {
+  [State Space (29D)\nTracking errors\nControl effort\nCurrent hyperparameters] as STATE_RL
+  [Action Space (17D)\nQ matrix (12D)\nR matrix (4D)\nHorizon N (1D)] as ACTION_RL
+}
+
+package "MPC Controller\n(CasADi/IPOPT)" #E8F5E9 {
+  [Optimization\nCost function J(Q,R,N)\nDynamics constraints\nControl limits] as OPT
+  [Output\nOptimal control u*] as OUTPUT_MPC
+}
+
+package "UAV Environment\n(PyBullet)" #FFF3E0 {
+  [State Space (12D)\nPosition, Velocity\nAngles, Rates] as STATE_UAV
+  [Physics Simulation\nRigid body dynamics\nMotor dynamics\nAerodynamics] as PHYSICS
+}
+
+STATE_RL --> OPT : Hyperparameters\n(Q, R, N)
+OPT --> OUTPUT_MPC
+OUTPUT_MPC --> STATE_UAV : Control input\nu(t)
+STATE_UAV --> OPT : State feedback\nx(t)
+PHYSICS --> STATE_RL : Performance metrics\n(tracking error)
+
+note right of STATE_RL
+  **PPO Algorithm**
+  - 2 hidden layers (256 units)
+  - 4 parallel environments
+  - Learning rate: 3×10⁻⁴
+end note
+
+note bottom of OPT
+  **Real-time MPC**
+  - Solve time: 30-40ms
+  - Horizon N: 10 steps
+  - Update rate: 50Hz
+end note
+
+note left of STATE_UAV
+  **High-Fidelity Simulation**
+  - Physics Δt: 1ms
+  - Control Δt: 20ms
+  - RK4 integration
+end note
+
+@enduml

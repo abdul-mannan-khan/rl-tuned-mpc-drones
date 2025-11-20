@@ -1,0 +1,138 @@
+================================================================================
+PYBULLET SCREENSHOT CAPTURE GUIDE
+================================================================================
+
+Script: D:\rl_tuned_mpc\capture_pybullet_screenshots.py
+
+PURPOSE:
+Generate high-quality screenshots from your PyBullet UAV simulation for Figure 4
+
+================================================================================
+RUNNING THE SCRIPT:
+================================================================================
+
+Command:
+  ./venv_drones/Scripts/python.exe capture_pybullet_screenshots.py
+
+Duration: ~30-60 seconds total
+  - Loads PyBullet environment
+  - Runs simulation
+  - Captures 9 screenshots from different angles
+  - Creates annotated figure
+
+================================================================================
+OUTPUT FILES (all in paper/figures/):
+================================================================================
+
+Multiple View Screenshots:
+  1. pybullet_view_perspective.png  - Professional 45° angle view
+  2. pybullet_view_side.png         - Side profile view
+  3. pybullet_view_top.png          - Bird's eye view
+  4. pybullet_view_close_up.png     - Detailed close-up
+
+Dynamic Simulation Frames:
+  5. pybullet_simulation_1.png      - Simulation frame 1
+  6. pybullet_simulation_2.png      - Simulation frame 2
+  7. pybullet_simulation_3.png      - Simulation frame 3
+
+Main Outputs:
+  8. pybullet_environment_main.png       - Clean high-res capture
+  9. pybullet_environment_annotated.png  - **RECOMMENDED FOR PAPER**
+
+================================================================================
+SCENE CONTENTS:
+================================================================================
+
+The simulation includes:
+  ✓ Quadrotor UAV (blue body, 4 propellers)
+  ✓ Ground plane (gray surface with collision detection)
+  ✓ Target waypoint (red sphere)
+  ✓ Reference trajectory (green spheres)
+  ✓ Coordinate axes (RGB: X-red, Y-green, Z-blue)
+  ✓ Proper lighting and shadows
+  ✓ High-quality rendering (1920x1080 or 2400x1600)
+
+================================================================================
+RECOMMENDED FOR FIGURE 4:
+================================================================================
+
+File: pybullet_environment_annotated.png
+
+Features:
+  ✓ Professionally annotated with labels
+  ✓ Shows quadrotor, target, trajectory, ground
+  ✓ High resolution (2400x1600 @ 300 DPI)
+  ✓ Publication-ready quality
+  ✓ Annotations include:
+    - "Quadrotor UAV (12D State, 4D Control)"
+    - "Target Waypoint"
+    - "Reference Trajectory"
+    - "Ground Plane (Collision Detection)"
+
+================================================================================
+USAGE IN LaTeX:
+================================================================================
+
+In main.tex, use:
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/pybullet_environment_annotated.png}
+  \caption{PyBullet UAV simulation environment showing...}
+  \label{fig:pybullet}
+\end{figure}
+
+Or use the non-annotated version and add your own caption text.
+
+================================================================================
+CUSTOMIZATION:
+================================================================================
+
+To modify the script:
+1. Open: D:\rl_tuned_mpc\capture_pybullet_screenshots.py
+2. Edit camera angles in capture_multiple_views()
+3. Change drone model in __init__() (cf2x, racing_drone, etc.)
+4. Adjust annotations in create_annotated_figure()
+5. Re-run the script
+
+================================================================================
+TROUBLESHOOTING:
+================================================================================
+
+If PyBullet window doesn't appear:
+  - Change gui=True to gui=False in the script
+  - Screenshots will still be captured
+
+If drone model not found:
+  - Script will create a simple quadrotor representation
+  - Still produces good screenshots
+
+If screenshots are blank:
+  - Increase time.sleep() duration
+  - Check that GUI is enabled
+
+================================================================================
+NEXT STEPS AFTER CAPTURE:
+================================================================================
+
+1. Open figures/ folder
+2. Review all 9 generated PNG files
+3. Choose best one for Figure 4 (recommended: annotated version)
+4. Upload to Overleaf with other figures
+5. Reference in main.tex as shown above
+6. Compile and verify appearance in paper
+
+================================================================================
+RESOLUTION & QUALITY:
+================================================================================
+
+All images are:
+  ✓ High resolution (1920x1080 or higher)
+  ✓ PNG format (lossless)
+  ✓ Professional lighting and shadows
+  ✓ Anti-aliased rendering
+  ✓ Suitable for publication
+
+Typical file sizes: 200KB - 2MB per image
+
+================================================================================

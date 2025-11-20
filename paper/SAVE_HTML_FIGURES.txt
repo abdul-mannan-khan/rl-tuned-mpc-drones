@@ -1,0 +1,137 @@
+================================================================================
+HOW TO SAVE HTML FIGURES AS HIGH-QUALITY IMAGES
+================================================================================
+
+You now have 3 professional HTML figures with perfect arrows and colors:
+  1. figure_2_architecture.html
+  2. figure_3_transfer.html
+  3. figure_4_pybullet.html
+
+--------------------------------------------------------------------------------
+METHOD 1: Save as PDF (BEST QUALITY - Recommended)
+--------------------------------------------------------------------------------
+
+For each HTML file:
+
+1. Double-click the .html file to open in your web browser
+   (Chrome, Firefox, Edge, etc.)
+
+2. Press Ctrl+P (or File → Print)
+
+3. In the print dialog:
+   - Destination: "Save as PDF" or "Microsoft Print to PDF"
+   - Layout: Portrait
+   - Margins: None or Minimal
+   - Background graphics: ON (important!)
+   - Scale: 100%
+
+4. Click "Save" and name the files:
+   - figure_2_architecture.html → save as system_architecture.pdf
+   - figure_3_transfer.html → save as transfer_learning_flow.pdf
+   - figure_4_pybullet.html → save as pybullet_environment.pdf
+
+5. Save all PDFs to: D:\rl_tuned_mpc\paper\figures\
+
+--------------------------------------------------------------------------------
+METHOD 2: Save as PNG (Good Quality)
+--------------------------------------------------------------------------------
+
+For each HTML file:
+
+1. Open the .html file in browser
+
+2. Right-click on the diagram (the colored part)
+
+3. Select "Save image as..." or "Copy image"
+
+4. If "Save image as":
+   - Choose PNG format
+   - Save to figures\ folder
+
+5. If "Copy image":
+   - Open Paint or any image editor
+   - Paste (Ctrl+V)
+   - Save as PNG
+
+--------------------------------------------------------------------------------
+METHOD 3: Screenshot (Quick but lower quality)
+--------------------------------------------------------------------------------
+
+1. Open .html file in browser
+
+2. Press Windows key + Shift + S (Snipping Tool)
+
+3. Select the diagram area
+
+4. Save from clipboard or Snipping Tool
+
+Note: This gives lower quality than Methods 1-2
+
+--------------------------------------------------------------------------------
+RECOMMENDED: Use Method 1 (PDF)
+--------------------------------------------------------------------------------
+
+PDFs are:
+  ✓ Vector graphics (infinite zoom, no pixelation)
+  ✓ Highest quality for publication
+  ✓ Small file size
+  ✓ Accepted by all journals/conferences
+
+--------------------------------------------------------------------------------
+WHAT YOU'LL GET:
+--------------------------------------------------------------------------------
+
+Professional diagrams with:
+  ✓ Perfect arrow positioning (no overlaps!)
+  ✓ Clean, professional colors
+  ✓ Proper alignment and spacing
+  ✓ High-quality typography
+  ✓ Publication-ready appearance
+
+--------------------------------------------------------------------------------
+VERIFICATION:
+--------------------------------------------------------------------------------
+
+After saving, check that you have these 4 files in figures\ folder:
+
+  ✓ training_results.png (already exists - Figure 1)
+  ✓ system_architecture.pdf (Figure 2 - from HTML)
+  ✓ transfer_learning_flow.pdf (Figure 3 - from HTML)
+  ✓ pybullet_environment.pdf (Figure 4 - from HTML)
+
+--------------------------------------------------------------------------------
+TROUBLESHOOTING:
+--------------------------------------------------------------------------------
+
+Q: Colors look faded in PDF
+A: Make sure "Background graphics" is ON in print settings
+
+Q: Diagram is cut off
+A: Adjust margins to "None" or set to "Fit to page"
+
+Q: Can't see the diagram in browser
+A: The HTML file is valid - try a different browser (Chrome recommended)
+
+Q: File size too large
+A: PDF should be 50-200 KB - if larger, reduce browser zoom before printing
+
+--------------------------------------------------------------------------------
+NEXT STEPS:
+--------------------------------------------------------------------------------
+
+After saving all 3 PDFs:
+
+1. Verify all 4 figures in figures\ folder
+2. Upload to Overleaf:
+   - main.tex
+   - references.bib
+   - aaai24.sty
+   - All 4 figures
+3. Compile in Overleaf
+4. Check page count (~7 pages)
+5. Download final PDF
+6. Submit!
+
+================================================================================
+TOTAL TIME: 5 minutes for all 3 figures
+================================================================================

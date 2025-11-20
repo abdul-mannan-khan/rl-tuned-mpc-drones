@@ -1,0 +1,51 @@
+@startuml
+skinparam componentStyle rectangle
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam ArrowThickness 3
+skinparam ArrowColor #1976D2
+
+title Sequential Transfer Learning Across UAV Platforms
+
+package "Phase 1: Base Training" #BBDEFB {
+  component "Crazyflie 2.X\n(0.027 kg)\n\n**Training:**\nSteps: 20,000\nLearning rate: 3×10⁻⁴\nTime: 200 minutes\n\n**Trained from scratch**" as CF
+}
+
+package "Phase 2: Transfer" #90CAF9 {
+  component "Racing Drone\n(0.800 kg)\n\n**Fine-tuning:**\nSteps: 5,000 (25%)\nLearning rate: 3×10⁻⁵\nTime: 52 minutes\n\n**From CF checkpoint**" as RD
+}
+
+package "Phase 3: Transfer" #64B5F6 {
+  component "Generic Quadrotor\n(2.500 kg)\n\n**Fine-tuning:**\nSteps: 5,000 (25%)\nLearning rate: 3×10⁻⁵\nTime: 52 minutes\n\n**From RD checkpoint**" as GQ
+}
+
+package "Phase 4: Transfer" #42A5F5 {
+  component "Heavy-Lift Hexarotor\n(5.500 kg)\n\n**Fine-tuning:**\nSteps: 5,000 (25%)\nLearning rate: 3×10⁻⁵\nTime: 59 minutes\n\n**From GQ checkpoint**" as HL
+}
+
+CF -down-> RD : **Transfer**\nPolicy + Value Network
+RD -down-> GQ : **Transfer**\nPolicy + Value Network
+GQ -down-> HL : **Transfer**\nPolicy + Value Network
+
+package "Summary: Efficiency Gains" #C8E6C9 {
+  component "**Without Transfer:**\nTotal: 80,000 steps, 828 min\n\n**With Transfer:**\nTotal: 35,000 steps, 363 min\n\n**Savings:**\n• 75% step reduction\n• 56.2% time savings\n• 1.34±0.01m RMSE" as SUMMARY
+}
+
+HL -down-> SUMMARY
+
+note right of CF
+  **Base Model**
+  Lightest platform
+  Full exploration
+end note
+
+note right of HL
+  **200× Mass Range**
+  0.027 kg → 5.5 kg
+
+  **6000× Inertia**
+  Full heterogeneity
+end note
+
+@enduml

@@ -1,0 +1,108 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+venv/
+venv_drones/
+ENV/
+env/
+.venv
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# PyBullet
+*.bullet
+*.log
+
+# Matplotlib
+*.png
+*.jpg
+*.pdf
+
+# Results and logs
+results/**/*.png
+results/**/*.mp4
+results/**/*.gif
+*.log
+*.out
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
+nul
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# LaTeX
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.out
+*.toc
+*.nav
+*.snm
+*.vrb
+
+# Exclude large external repos (keep as submodule or external dependency)
+gym-pybullet-drones/
+
+# Keep important result files but not all
+!results/**/*.json
+!results/**/*.yaml
+!results/**/README.md
+
+# Keep documentation images
+!docs/**/*.png
+!docs/**/*.jpg
+!paper/figures/*.pdf
+!paper/figures/*.png
