@@ -1,0 +1,63 @@
+{
+  "iteration": 15,
+  "date": "2025-11-20 17:25:45",
+  "test_name": "MPC Hover Test",
+  "configuration": {
+    "mpc_horizon": 20,
+    "timestep": 0.020833,
+    "Q_weights": [
+      100.0,
+      100.0,
+      150.0,
+      10.0,
+      10.0,
+      20.0,
+      50.0,
+      50.0,
+      30.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "R_weights": [
+      0.1,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "control_frequency_hz": 48,
+    "physics_frequency_hz": 240
+  },
+  "target": {
+    "position": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "duration_seconds": 10.0
+  },
+  "results": {
+    "position_tracking": {
+      "max_error_m": 0.9,
+      "rmse_m": 0.11540681529301285,
+      "final_error_m": 0.03367552180578353,
+      "status": "FAIL"
+    },
+    "mpc_performance": {
+      "avg_solve_time_ms": 39.73600767653641,
+      "max_solve_time_ms": 224.0736484527588,
+      "success_rate_percent": 100.0
+    },
+    "simulation": {
+      "real_time_seconds": 39.82768535614014,
+      "simulated_time_seconds": 20.0,
+      "real_time_factor": 0.5021632520484058
+    }
+  },
+  "pass_criteria": {
+    "position_rmse_target_m": 0.1,
+    "position_rmse_achieved_m": 0.11540681529301285,
+    "passed": false
+  },
+  "notes": "MPC figure-8 trajectory tracking test at z=1.0m"
+}
