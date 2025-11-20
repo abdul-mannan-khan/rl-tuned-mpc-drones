@@ -1,0 +1,57 @@
+{
+  "iteration": 1,
+  "date": "2025-11-20",
+  "test_name": "MPC Hover Test - Baseline",
+  "configuration": {
+    "mpc_horizon": 20,
+    "timestep": 0.020833,
+    "Q_weights": [100, 100, 150, 10, 10, 20, 50, 50, 30, 1, 1, 1],
+    "R_weights": [0.1, 1.0, 1.0, 1.0],
+    "control_frequency_hz": 48,
+    "physics_frequency_hz": 240
+  },
+  "target": {
+    "position": [0.0, 0.0, 1.0],
+    "duration_seconds": 10.0
+  },
+  "results": {
+    "position_tracking": {
+      "max_error_m": 1.0062,
+      "rmse_m": 0.9659,
+      "final_error_m": 1.0005,
+      "status": "FAIL"
+    },
+    "mpc_performance": {
+      "avg_solve_time_ms": 149.13,
+      "max_solve_time_ms": 2632.72,
+      "success_rate_percent": 99.8,
+      "status": "NEEDS_OPTIMIZATION"
+    },
+    "simulation": {
+      "real_time_seconds": 72.69,
+      "simulated_time_seconds": 10.0,
+      "real_time_factor": 0.14,
+      "status": "SLOW"
+    }
+  },
+  "analysis": {
+    "root_cause": "Control allocation issue - MPC thrust commands not properly converted to motor RPMs",
+    "observations": [
+      "Drone remained near ground (~0.01m) instead of climbing to target (1.0m)",
+      "Large position error throughout test",
+      "MPC solver converging (99.8% success) but controls ineffective",
+      "Slow solve time indicates need for optimization"
+    ],
+    "next_steps": [
+      "Fix control_to_rpm() conversion function",
+      "Use proper thrust-to-RPM mapping for Crazyflie",
+      "Consider using built-in DSL PID controller for comparison",
+      "Reduce MPC horizon or increase solver tolerance for speed"
+    ]
+  },
+  "pass_criteria": {
+    "position_rmse_target_m": 0.1,
+    "position_rmse_achieved_m": 0.9659,
+    "passed": false
+  }
+}

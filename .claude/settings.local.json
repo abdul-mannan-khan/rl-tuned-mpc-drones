@@ -15,7 +15,9 @@
       "Bash(git commit -m \"$(cat <<''EOF''\nInitial commit: RL-Enhanced MPC for Multi-Drone Systems\n\nPhase 1: Simulator Selection & Validation - COMPLETE\n- PyBullet (gym-pybullet-drones v2.0.0) selected and validated\n- MPC trajectory tracking demonstrated (190 steps)\n- Comprehensive test suite and documentation\n- All 12 states accessible @ 48-240 Hz\n- Real-time capable performance\n\nPhase 2: MPC Controller Implementation - COMPLETE\n- Nonlinear MPC with 12-state quadrotor dynamics\n- CasADi + IPOPT optimization framework\n- RK4 integration for accurate dynamics\n- Cost function with stage and terminal costs\n- Control constraints and warm starting\n- Test infrastructure with PyBullet integration\n- Configuration management via YAML\n\nKey Components:\n- src/mpc/mpc_controller.py: Full MPC implementation (530 lines)\n- configs/mpc_crazyflie.yaml: MPC configuration for Crazyflie 2.X\n- tests/test_mpc_controller.py: Comprehensive test suite (402 lines)\n- tests/test_simulator_capabilities.py: Simulator validation\n- Complete documentation and progress tracking\n\nDocumentation:\n- PHASE_01_COMPLETE.md: Phase 1 summary and validation\n- PHASE_02_PROGRESS.md: Phase 2 status and architecture\n- README.md: Complete project overview\n- Detailed roadmap and development guides\n\nNext Phase: RL integration for hyperparameter tuning\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
       "Bash(git remote add:*)",
       "Bash(git push:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(tee:*)",
+      "Bash(timeout:*)"
     ],
     "deny": [],
     "ask": []

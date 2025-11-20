@@ -1,0 +1,65 @@
+{
+  "iteration": 11,
+  "date": "2025-11-20 17:08:01",
+  "test_name": "MPC Hover Test",
+  "configuration": {
+    "mpc_horizon": 20,
+    "timestep": 0.020833,
+    "Q_weights": [
+      100.0,
+      100.0,
+      150.0,
+      10.0,
+      10.0,
+      20.0,
+      50.0,
+      50.0,
+      30.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "R_weights": [
+      0.1,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "control_frequency_hz": 48,
+    "physics_frequency_hz": 240
+  },
+  "target": {
+    "position": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "duration_seconds": 10.0
+  },
+  "results": {
+    "position_tracking": {
+      "max_error_m": 0.9,
+      "rmse_m": 0.2145515718561406,
+      "final_error_m": 8.199981168832693e-05,
+      "status": "FAIL"
+    },
+    "mpc_performance": {
+      "avg_solve_time_ms": 20.24699444592741,
+      "max_solve_time_ms": 115.49568176269531,
+      "success_rate_percent": 100.0,
+      "status": "NEEDS_OPTIMIZATION"
+    },
+    "simulation": {
+      "real_time_seconds": 5.123260259628296,
+      "simulated_time_seconds": 5.0,
+      "real_time_factor": 0.9759410505455682,
+      "status": "ACCEPTABLE"
+    }
+  },
+  "pass_criteria": {
+    "position_rmse_target_m": 0.1,
+    "position_rmse_achieved_m": 0.2145515718561406,
+    "passed": false
+  },
+  "notes": "MPC hover test with proper PWM/RPM control allocation"
+}

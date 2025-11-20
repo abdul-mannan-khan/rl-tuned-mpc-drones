@@ -34,7 +34,7 @@ After creating the repository on GitHub, run these commands in your terminal:
 ```bash
 # Add GitHub repository as remote
 # Replace YOUR_USERNAME with your GitHub username
-git remote add origin https://github.com/YOUR_USERNAME/rl-tuned-mpc-drones.git
+git remote add origin https://github.com/abdul-mannan-khan/rl-tuned-mpc-drones.git
 
 # Verify remote was added
 git remote -v

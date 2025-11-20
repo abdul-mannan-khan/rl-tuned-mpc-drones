@@ -1,0 +1,72 @@
+pybullet build time: Nov 17 2025 14:30:41
+D:\rl_tuned_mpc\venv_drones\lib\site-packages\gymnasium\spaces\box.py:236: UserWarning: [33mWARN: Box low's precision lowered by casting to float32, current low.dtype=float64[0m
+  gym.logger.warn(
+D:\rl_tuned_mpc\venv_drones\lib\site-packages\gymnasium\spaces\box.py:306: UserWarning: [33mWARN: Box high's precision lowered by casting to float32, current high.dtype=float64[0m
+  gym.logger.warn(
+============================================================
+MPC Controller Test Suite
+============================================================
+Loading MPC controller from configs/mpc_crazyflie.yaml...
+MPC initialized: N=20, dt=0.020833
+Creating PyBullet environment...
+[INFO] BaseAviary.__init__() loaded parameters from the drone's .urdf:
+[INFO] m 0.027000, L 0.039700,
+[INFO] ixx 0.000014, iyy 0.000014, izz 0.000022,
+[INFO] kf 3.160000e-10, km 7.940000e-12,
+[INFO] t2w 2.250000, max_speed_kmh 30.000000,
+[INFO] gnd_eff_coeff 11.368590, prop_radius 0.023135,
+[INFO] drag_xy_coeff 0.000001, drag_z_coeff 0.000001,
+[INFO] dw_coeff_1 2267.180000, dw_coeff_2 0.160000, dw_coeff_3 -0.110000
+
+============================================================
+Test 1: Hover Stability
+Duration: 10.0s, Target altitude: 1.0m
+============================================================
+
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+Step   50 | t= 1.04s | Pos error: 0.0001m | Solve time: 16.00ms
+Step  100 | t= 2.08s | Pos error: 0.0001m | Solve time: 24.47ms
+Step  150 | t= 3.13s | Pos error: 0.0001m | Solve time: 20.00ms
+Step  200 | t= 4.17s | Pos error: 0.0001m | Solve time: 20.09ms
+Step  250 | t= 5.21s | Pos error: 0.0001m | Solve time: 17.29ms
+Step  300 | t= 6.25s | Pos error: 0.0001m | Solve time: 20.15ms
+Step  350 | t= 7.29s | Pos error: 0.0001m | Solve time: 16.39ms
+Step  400 | t= 8.33s | Pos error: 0.0001m | Solve time: 17.85ms
+Step  450 | t= 9.37s | Pos error: 0.0001m | Solve time: 15.33ms
+
+============================================================
+Test Results:
+============================================================
+Position Tracking:
+  Max error:   0.0001 m
+  RMSE:        0.0001 m
+  Final error: 0.0001 m
+
+MPC Performance:
+  Avg solve time: 18.46 ms
+  Max solve time: 86.71 ms
+  Success rate:   100.0%
+
+Simulation:
+  Real time:      9.32 s
+  Simulated time: 10.00 s
+  Real-time factor: 1.07x
+
+============================================================
+Test Result: PASS
+============================================================
+
+
+Results saved to: D:\rl_tuned_mpc\results\phase_02\test_iteration_02.json
+
+Plot saved to: D:\rl_tuned_mpc\results\phase_02\mpc_hover_test.png
+
+============================================================
+Overall Test Result: PASS
+============================================================
