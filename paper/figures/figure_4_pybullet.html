@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Figure 4: PyBullet Environment</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <svg width="1100" height="800" xmlns="http://www.w3.org/2000/svg">
+            <!-- Title -->
+            <text x="550" y="30" font-size="20" font-weight="bold" text-anchor="middle" fill="#333">
+                PyBullet UAV Simulation Environment
+            </text>
+
+            <!-- Definitions for arrows -->
+            <defs>
+                <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+                    <polygon points="0 0, 10 5, 0 10" fill="#1976D2" />
+                </marker>
+            </defs>
+
+            <!-- Control Input -->
+            <g id="control">
+                <rect x="50" y="100" width="250" height="140" rx="10" fill="#E8F5E9" stroke="#388E3C" stroke-width="3"/>
+                <text x="175" y="130" font-size="15" font-weight="bold" text-anchor="middle" fill="#1B5E20">
+                    Control Input u(t)
+                </text>
+                <text x="175" y="155" font-size="12" text-anchor="middle" fill="#333">
+                    <tspan x="175" dy="0">4-Dimensional:</tspan>
+                    <tspan x="175" dy="18">• Thrust: T</tspan>
+                    <tspan x="175" dy="16">• Roll rate: ω_φ</tspan>
+                    <tspan x="175" dy="16">• Pitch rate: ω_θ</tspan>
+                    <tspan x="175" dy="16">• Yaw rate: ω_ψ</tspan>
+                </text>
+            </g>
+
+            <!-- UAV Body -->
+            <g id="uav">
+                <rect x="400" y="100" width="300" height="140" rx="10" fill="#E3F2FD" stroke="#1976D2" stroke-width="3"/>
+                <text x="550" y="130" font-size="15" font-weight="bold" text-anchor="middle" fill="#0D47A1">
+                    Quadrotor UAV
+                </text>
+                <text x="550" y="150" font-size="12" text-anchor="middle" fill="#666">
+                    Rigid Body Dynamics
+                </text>
+                <text x="550" y="175" font-size="12" text-anchor="middle" fill="#333">
+                    <tspan x="550" dy="0">• 4 Motors + Propellers</tspan>
+                    <tspan x="550" dy="16">• Body: Mass &amp; Inertia</tspan>
+                    <tspan x="550" dy="16">• 6-DOF Motion</tspan>
+                </text>
+            </g>
+
+            <!-- Physics Engine -->
+            <g id="physics">
+                <rect x="800" y="100" width="250" height="140" rx="10" fill="#E1F5FE" stroke="#0288D1" stroke-width="3"/>
+                <text x="925" y="130" font-size="15" font-weight="bold" text-anchor="middle" fill="#01579B">
+                    PyBullet Physics
+                </text>
+                <text x="925" y="155" font-size="12" text-anchor="middle" fill="#333">
+                    <tspan x="925" dy="0">• RK4 Integration</tspan>
+                    <tspan x="925" dy="16">• Δt = 1ms (240Hz)</tspan>
+                    <tspan x="925" dy="16">• Rigid body solver</tspan>
+                    <tspan x="925" dy="16">• Motor dynamics</tspan>
+                </text>
+            </g>
+
+            <!-- Environment Features -->
+            <g id="environment">
+                <rect x="800" y="300" width="250" height="120" rx="10" fill="#F3E5F5" stroke="#7B1FA2" stroke-width="3"/>
+                <text x="925" y="330" font-size="15" font-weight="bold" text-anchor="middle" fill="#4A148C">
+                    Environment
+                </text>
+                <text x="925" y="355" font-size="12" text-anchor="middle" fill="#333">
+                    <tspan x="925" dy="0">• Aerodynamic drag</tspan>
+                    <tspan x="925" dy="16">• Ground effect</tspan>
+                    <tspan x="925" dy="16">• Collision detection</tspan>
+                    <tspan x="925" dy="16">• Gravity (9.81 m/s²)</tspan>
+                </text>
+            </g>
+
+            <!-- State Vector -->
+            <g id="state">
+                <rect x="400" y="300" width="300" height="140" rx="10" fill="#FFF3E0" stroke="#F57C00" stroke-width="3"/>
+                <text x="550" y="330" font-size="15" font-weight="bold" text-anchor="middle" fill="#E65100">
+                    State Vector x(t)
+                </text>
+                <text x="550" y="355" font-size="12" text-anchor="middle" fill="#333">
+                    <tspan x="550" dy="0">12-Dimensional:</tspan>
+                    <tspan x="550" dy="18">• Position: [x, y, z]</tspan>
+                    <tspan x="550" dy="16">• Velocity: [vx, vy, vz]</tspan>
+                    <tspan x="550" dy="16">• Angles: [φ, θ, ψ]</tspan>
+                    <tspan x="550" dy="16">• Rates: [p, q, r]</tspan>
+                </text>
+            </g>
+
+            <!-- Feedback -->
+            <g id="feedback">
+                <rect x="50" y="300" width="250" height="100" rx="10" fill="#FFF9C4" stroke="#F9A825" stroke-width="3"/>
+                <text x="175" y="330" font-size="15" font-weight="bold" text-anchor="middle" fill="#F57F17">
+                    Feedback Loop
+                </text>
+                <text x="175" y="355" font-size="12" text-anchor="middle" fill="#333">
+                    <tspan x="175" dy="0">• Tracking error e(t)</tspan>
+                    <tspan x="175" dy="16">• To MPC Controller</tspan>
+                    <tspan x="175" dy="16">• 20ms sampling</tspan>
+                </text>
+            </g>
+
+            <!-- Arrows -->
+            <!-- Control to UAV -->
+            <line x1="300" y1="170" x2="400" y2="170" stroke="#1976D2" stroke-width="4" marker-end="url(#arrow)"/>
+            <text x="350" y="160" font-size="11" font-weight="bold" text-anchor="middle" fill="#1976D2">
+                Commands
+            </text>
+
+            <!-- UAV to Physics -->
+            <line x1="700" y1="170" x2="800" y2="170" stroke="#1976D2" stroke-width="4" marker-end="url(#arrow)"/>
+            <text x="750" y="160" font-size="11" font-weight="bold" text-anchor="middle" fill="#1976D2">
+                Update
+            </text>
+
+            <!-- Physics to Environment -->
+            <line x1="925" y1="240" x2="925" y2="300" stroke="#1976D2" stroke-width="4" marker-end="url(#arrow)"/>
+            <text x="970" y="275" font-size="11" font-weight="bold" text-anchor="start" fill="#1976D2">
+                Forces
+            </text>
+
+            <!-- Environment to State -->
+            <line x1="800" y1="360" x2="700" y2="360" stroke="#1976D2" stroke-width="4" marker-end="url(#arrow)"/>
+            <text x="750" y="380" font-size="11" font-weight="bold" text-anchor="middle" fill="#1976D2">
+                Integration
+            </text>
+
+            <!-- State to Feedback -->
+            <line x1="400" y1="350" x2="300" y2="350" stroke="#1976D2" stroke-width="4" marker-end="url(#arrow)"/>
+            <text x="350" y="340" font-size="11" font-weight="bold" text-anchor="middle" fill="#1976D2">
+                Measurement
+            </text>
+
+            <!-- Feedback to Control -->
+            <line x1="175" y1="300" x2="175" y2="240" stroke="#D32F2F" stroke-width="4" marker-end="url(#arrow)"/>
+            <text x="200" y="275" font-size="11" font-weight="bold" text-anchor="start" fill="#D32F2F">
+                Error
+            </text>
+
+            <!-- Reference Trajectory arrow -->
+            <line x1="50" y1="350" x2="50" y2="350" stroke="#388E3C" stroke-width="3" marker-end="url(#arrow)"/>
+            <path d="M 30 500 Q 30 350, 50 350" fill="none" stroke="#388E3C" stroke-width="3" stroke-dasharray="5,5"/>
+            <rect x="30" y="480" width="180" height="60" rx="8" fill="#C8E6C9" stroke="#388E3C" stroke-width="2"/>
+            <text x="120" y="505" font-size="13" font-weight="bold" text-anchor="middle" fill="#1B5E20">
+                Reference
+            </text>
+            <text x="120" y="525" font-size="11" text-anchor="middle" fill="#333">
+                Target Waypoints
+            </text>
+
+            <!-- Info boxes -->
+            <g id="info-1">
+                <rect x="50" y="580" width="320" height="90" rx="8" fill="#FAFAFA" stroke="#1976D2" stroke-width="2" stroke-dasharray="5,5"/>
+                <text x="210" y="605" font-size="13" font-weight="bold" text-anchor="middle" fill="#1976D2">
+                    Platform Parameters
+                </text>
+                <text x="210" y="625" font-size="11" text-anchor="middle" fill="#333">
+                    <tspan x="210" dy="0">• Mass range: 0.027 - 5.5 kg (200×)</tspan>
+                    <tspan x="210" dy="16">• Inertia variation: 6000×</tspan>
+                    <tspan x="210" dy="16">• Thrust/Weight: 2.0 - 3.5</tspan>
+                </text>
+            </g>
+
+            <g id="info-2">
+                <rect x="400" y="580" width="320" height="90" rx="8" fill="#FAFAFA" stroke="#0288D1" stroke-width="2" stroke-dasharray="5,5"/>
+                <text x="560" y="605" font-size="13" font-weight="bold" text-anchor="middle" fill="#0288D1">
+                    Simulation Fidelity
+                </text>
+                <text x="560" y="625" font-size="11" text-anchor="middle" fill="#333">
+                    <tspan x="560" dy="0">• High-fidelity 3D simulation</tspan>
+                    <tspan x="560" dy="16">• Real-time compatible</tspan>
+                    <tspan x="560" dy="16">• Suitable for sim-to-real transfer</tspan>
+                </text>
+            </g>
+
+            <g id="info-3">
+                <rect x="750" y="580" width="320" height="90" rx="8" fill="#FAFAFA" stroke="#7B1FA2" stroke-width="2" stroke-dasharray="5,5"/>
+                <text x="910" y="605" font-size="13" font-weight="bold" text-anchor="middle" fill="#7B1FA2">
+                    Realistic Physics
+                </text>
+                <text x="910" y="625" font-size="11" text-anchor="middle" fill="#333">
+                    <tspan x="910" dy="0">• Validated dynamics model</tspan>
+                    <tspan x="910" dy="16">• Ground interaction effects</tspan>
+                    <tspan x="910" dy="16">• Collision handling</tspan>
+                </text>
+            </g>
+
+            <!-- Legend -->
+            <g id="legend">
+                <text x="50" y="720" font-size="11" fill="#666">
+                    <tspan font-weight="bold">Data Flow:</tspan>
+                    <tspan x="200" fill="#1976D2">● Forward (blue)</tspan>
+                    <tspan x="350" fill="#D32F2F">● Feedback (red)</tspan>
+                    <tspan x="500" fill="#388E3C">● Reference (green dashed)</tspan>
+                </text>
+            </g>
+        </svg>
+    </div>
+
+    <script>
+        console.log("To save as image:");
+        console.log("1. Press Ctrl+P (Print)");
+        console.log("2. Select 'Save as PDF'");
+        console.log("3. Save as 'pybullet_environment.pdf'");
+    </script>
+</body>
+</html>

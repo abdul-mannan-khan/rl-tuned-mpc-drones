@@ -1,0 +1,61 @@
+@startuml
+skinparam componentStyle rectangle
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam ArrowThickness 2
+
+title PyBullet UAV Simulation Environment
+
+package "Control Interface" #E8F5E9 {
+  [Control Input u(t)\n4D: Thrust, Roll/Pitch/Yaw rates] as CONTROL
+}
+
+package "Quadrotor UAV\nRigid Body Dynamics" #E3F2FD {
+  [Motors and Propellers\n4 rotors with thrust] as MOTORS
+  [UAV Body\nMass and Inertia] as BODY
+}
+
+package "PyBullet Physics" #E1F5FE {
+  [RK4 Integration\nΔt = 1ms, 240Hz] as INTEGRATION
+  [Rigid Body Dynamics\n6-DOF Motion] as RBD
+  [Motor Model\nFirst-order lag] as MOTOR_DYN
+}
+
+package "Environment" #F3E5F5 {
+  [Aerodynamic Forces\nDrag and Ground Effect] as AERO
+  [Reference Trajectory\nTarget Waypoints] as TRAJ
+}
+
+package "State Observation" #FFF3E0 {
+  [State Vector x(t)\n12D: Position, Velocity\nAngles, Rates] as STATE
+}
+
+package "Feedback" #FFF9C4 {
+  [Tracking Error e(t)\nTo MPC Controller] as ERROR
+}
+
+CONTROL --> MOTORS
+MOTORS --> BODY
+BODY --> INTEGRATION
+INTEGRATION --> RBD
+RBD --> MOTOR_DYN
+MOTOR_DYN --> AERO
+AERO --> STATE
+STATE --> ERROR
+ERROR --> CONTROL
+TRAJ --> ERROR
+
+note top of MOTORS
+  **Platform Range**
+  Mass: 0.027 - 5.5 kg
+  Inertia: varies 6000×
+end note
+
+note bottom of INTEGRATION
+  **High-Fidelity Physics**
+  Real-time compatible
+  Sim-to-real ready
+end note
+
+@enduml

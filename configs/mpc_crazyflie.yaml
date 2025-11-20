@@ -1,0 +1,116 @@
+# MPC Configuration for Crazyflie 2.X
+# Author: Dr. Abdul Manan Khan
+# Project: RL-Enhanced MPC for Multi-Drone Systems
+
+mpc:
+  prediction_horizon: 20    # N (number of steps to look ahead)
+  control_horizon: 20       # Same as prediction horizon
+  timestep: 0.020833        # dt = 0.020833s (48 Hz control frequency)
+
+  # Weight matrices (initial baseline - will be tuned by RL)
+  # State cost matrix Q: [px, py, pz, vx, vy, vz, roll, pitch, yaw, p, q, r]
+  Q: [
+    100.0,  # px - position x
+    100.0,  # py - position y
+    150.0,  # pz - position z (slightly higher weight for altitude)
+    10.0,   # vx - velocity x
+    10.0,   # vy - velocity y
+    20.0,   # vz - velocity z (higher for stability)
+    50.0,   # roll
+    50.0,   # pitch
+    30.0,   # yaw (lower - less critical)
+    1.0,    # p - roll rate
+    1.0,    # q - pitch rate
+    1.0     # r - yaw rate
+  ]
+
+  # Terminal cost matrix Q_terminal (typically 5-10x Q for final convergence)
+  Q_terminal: [
+    500.0,  # px
+    500.0,  # py
+    750.0,  # pz
+    50.0,   # vx
+    50.0,   # vy
+    100.0,  # vz
+    250.0,  # roll
+    250.0,  # pitch
+    150.0,  # yaw
+    10.0,   # p
+    10.0,   # q
+    10.0    # r
+  ]
+
+  # Control cost matrix R: [thrust, roll_rate_cmd, pitch_rate_cmd, yaw_rate_cmd]
+  R: [
+    0.1,    # thrust (encourage smooth thrust changes)
+    1.0,    # roll rate command
+    1.0,    # pitch rate command
+    1.0     # yaw rate command
+  ]
+
+  # Control constraints
+  # Thrust in Newtons, angular rates in rad/s
+  u_min: [0.0, -3.0, -3.0, -3.0]  # [thrust_min, ang_vel_min x3]
+  u_max: [0.6, 3.0, 3.0, 3.0]     # Crazyflie physical limits
+
+# Drone physical parameters (Crazyflie 2.X specifications)
+drone:
+  name: "Crazyflie 2.X"
+  mass: 0.027  # kg (27 grams)
+
+  # Moments of inertia (kg·m²)
+  inertia:
+    Ixx: 1.4e-5
+    Iyy: 1.4e-5
+    Izz: 2.2e-5
+
+  # Geometric parameters
+  arm_length: 0.0397  # m (center to motor)
+  configuration: "X"   # X-configuration quadrotor
+
+  # Motor parameters
+  max_rpm: 21702       # Maximum motor RPM
+  min_rpm: 0
+  motor_constant: 1.0e-9  # Thrust coefficient
+
+  # Physical limits
+  max_thrust: 0.81     # N (total, all 4 motors)
+  max_ang_vel: 3.0     # rad/s (conservative limit)
+
+  # Operating envelope
+  max_tilt_angle: 0.52  # rad (~30 degrees)
+  max_velocity: 2.0     # m/s
+  max_altitude: 5.0     # m (safety limit for testing)
+
+# Simulation parameters
+simulation:
+  physics_freq_hz: 240  # PyBullet physics update rate
+  control_freq_hz: 48   # MPC control update rate (240/48 = 5)
+  gui: false            # Set to true for visualization
+
+# Initial conditions (for testing)
+initial_state:
+  position: [0.0, 0.0, 1.0]     # [x, y, z] in meters
+  velocity: [0.0, 0.0, 0.0]     # [vx, vy, vz] in m/s
+  orientation: [0.0, 0.0, 0.0]  # [roll, pitch, yaw] in radians
+  ang_velocity: [0.0, 0.0, 0.0] # [p, q, r] in rad/s
+
+# Reference trajectory parameters
+trajectory:
+  type: "waypoint"  # Options: hover, waypoint, circle, lemniscate
+  waypoints: [
+    [0.0, 0.0, 1.0],   # Start at 1m altitude
+    [1.0, 0.0, 1.5],   # Move to x=1m, z=1.5m
+    [1.0, 1.0, 1.5],   # Move to y=1m
+    [0.0, 1.0, 1.0],   # Return to x=0
+    [0.0, 0.0, 1.0]    # Back to start
+  ]
+  hover_time: 2.0      # Time to hover at each waypoint (seconds)
+  transition_time: 3.0  # Time to move between waypoints
+
+# Performance metrics
+metrics:
+  position_rmse_threshold: 0.05  # m
+  velocity_rmse_threshold: 0.1   # m/s
+  angle_rmse_threshold: 0.087    # rad (~5 degrees)
+  max_solve_time: 20.0           # ms (must be < control period)

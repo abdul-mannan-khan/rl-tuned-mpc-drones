@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Figure 2: System Architecture</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <svg width="1000" height="800" xmlns="http://www.w3.org/2000/svg">
+            <!-- Title -->
+            <text x="500" y="30" font-size="20" font-weight="bold" text-anchor="middle" fill="#333">
+                System Architecture: RL-Enhanced MPC Framework
+            </text>
+
+            <!-- Definitions for arrows -->
+            <defs>
+                <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                    <polygon points="0 0, 10 3, 0 6" fill="#1976D2" />
+                </marker>
+                <marker id="arrowhead-red" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                    <polygon points="0 0, 10 3, 0 6" fill="#D32F2F" />
+                </marker>
+            </defs>
+
+            <!-- RL Optimizer Box -->
+            <g id="rl-optimizer">
+                <rect x="50" y="80" width="280" height="180" rx="10" fill="#E3F2FD" stroke="#1976D2" stroke-width="3"/>
+                <text x="190" y="110" font-size="16" font-weight="bold" text-anchor="middle" fill="#0D47A1">
+                    RL Optimizer (PPO)
+                </text>
+                <text x="190" y="140" font-size="13" text-anchor="middle" fill="#333">
+                    <tspan x="190" dy="0">State Space (29D):</tspan>
+                    <tspan x="190" dy="20">• Tracking errors</tspan>
+                    <tspan x="190" dy="18">• Control effort</tspan>
+                    <tspan x="190" dy="18">• Current hyperparameters</tspan>
+                </text>
+                <text x="190" y="230" font-size="13" text-anchor="middle" fill="#333" font-weight="bold">
+                    Action: Q, R, N (17D)
+                </text>
+            </g>
+
+            <!-- MPC Controller Box -->
+            <g id="mpc-controller">
+                <rect x="360" y="80" width="280" height="180" rx="10" fill="#E8F5E9" stroke="#388E3C" stroke-width="3"/>
+                <text x="500" y="110" font-size="16" font-weight="bold" text-anchor="middle" fill="#1B5E20">
+                    MPC Controller
+                </text>
+                <text x="500" y="130" font-size="12" text-anchor="middle" fill="#666">
+                    (CasADi/IPOPT)
+                </text>
+                <text x="500" y="160" font-size="13" text-anchor="middle" fill="#333">
+                    <tspan x="500" dy="0">Optimization:</tspan>
+                    <tspan x="500" dy="20">• Cost function J(Q,R,N)</tspan>
+                    <tspan x="500" dy="18">• Dynamics constraints</tspan>
+                    <tspan x="500" dy="18">• Control limits</tspan>
+                </text>
+            </g>
+
+            <!-- UAV Environment Box -->
+            <g id="uav-environment">
+                <rect x="670" y="80" width="280" height="180" rx="10" fill="#FFF3E0" stroke="#F57C00" stroke-width="3"/>
+                <text x="810" y="110" font-size="16" font-weight="bold" text-anchor="middle" fill="#E65100">
+                    UAV Environment
+                </text>
+                <text x="810" y="130" font-size="12" text-anchor="middle" fill="#666">
+                    (PyBullet)
+                </text>
+                <text x="810" y="160" font-size="13" text-anchor="middle" fill="#333">
+                    <tspan x="810" dy="0">State Space (12D):</tspan>
+                    <tspan x="810" dy="20">• Position [x, y, z]</tspan>
+                    <tspan x="810" dy="18">• Velocity [vx, vy, vz]</tspan>
+                    <tspan x="810" dy="18">• Angles &amp; Rates</tspan>
+                </text>
+            </g>
+
+            <!-- Arrow 1: RL to MPC -->
+            <line x1="330" y1="140" x2="360" y2="140" stroke="#1976D2" stroke-width="3" marker-end="url(#arrowhead)"/>
+            <text x="345" y="130" font-size="12" text-anchor="middle" fill="#1976D2" font-weight="bold">
+                <tspan x="345" dy="0">Hyperparameters</tspan>
+                <tspan x="345" dy="14">(Q, R, N)</tspan>
+            </text>
+
+            <!-- Arrow 2: MPC to UAV -->
+            <line x1="640" y1="140" x2="670" y2="140" stroke="#1976D2" stroke-width="3" marker-end="url(#arrowhead)"/>
+            <text x="655" y="130" font-size="12" text-anchor="middle" fill="#1976D2" font-weight="bold">
+                <tspan x="655" dy="0">Control</tspan>
+                <tspan x="655" dy="14">u(t)</tspan>
+            </text>
+
+            <!-- Arrow 3: UAV to MPC (feedback) -->
+            <path d="M 670 220 Q 655 300, 640 220" fill="none" stroke="#D32F2F" stroke-width="3" marker-end="url(#arrowhead-red)"/>
+            <text x="640" y="280" font-size="12" text-anchor="middle" fill="#D32F2F" font-weight="bold">
+                <tspan x="640" dy="0">State</tspan>
+                <tspan x="640" dy="14">x(t)</tspan>
+            </text>
+
+            <!-- Arrow 4: UAV to RL (performance feedback) -->
+            <path d="M 810 260 L 810 380 L 190 380 L 190 260" fill="none" stroke="#D32F2F" stroke-width="3" marker-end="url(#arrowhead-red)"/>
+            <text x="500" y="400" font-size="12" text-anchor="middle" fill="#D32F2F" font-weight="bold">
+                Performance Metrics (tracking error, control effort)
+            </text>
+
+            <!-- Note 1: RL Details -->
+            <g id="note-rl">
+                <rect x="50" y="440" width="280" height="100" rx="8" fill="#F5F5F5" stroke="#1976D2" stroke-width="2" stroke-dasharray="5,5"/>
+                <text x="190" y="465" font-size="13" font-weight="bold" text-anchor="middle" fill="#1976D2">
+                    PPO Algorithm
+                </text>
+                <text x="190" y="485" font-size="11" text-anchor="middle" fill="#333">
+                    <tspan x="190" dy="0">• 2 hidden layers (256 units)</tspan>
+                    <tspan x="190" dy="16">• 4 parallel environments</tspan>
+                    <tspan x="190" dy="16">• Learning rate: 3×10⁻⁴</tspan>
+                </text>
+            </g>
+
+            <!-- Note 2: MPC Details -->
+            <g id="note-mpc">
+                <rect x="360" y="440" width="280" height="100" rx="8" fill="#F5F5F5" stroke="#388E3C" stroke-width="2" stroke-dasharray="5,5"/>
+                <text x="500" y="465" font-size="13" font-weight="bold" text-anchor="middle" fill="#388E3C">
+                    Real-Time MPC
+                </text>
+                <text x="500" y="485" font-size="11" text-anchor="middle" fill="#333">
+                    <tspan x="500" dy="0">• Solve time: 30-40ms</tspan>
+                    <tspan x="500" dy="16">• Horizon N: 10 steps</tspan>
+                    <tspan x="500" dy="16">• Update rate: 50Hz</tspan>
+                </text>
+            </g>
+
+            <!-- Note 3: UAV Details -->
+            <g id="note-uav">
+                <rect x="670" y="440" width="280" height="100" rx="8" fill="#F5F5F5" stroke="#F57C00" stroke-width="2" stroke-dasharray="5,5"/>
+                <text x="810" y="465" font-size="13" font-weight="bold" text-anchor="middle" fill="#F57C00">
+                    High-Fidelity Simulation
+                </text>
+                <text x="810" y="485" font-size="11" text-anchor="middle" fill="#333">
+                    <tspan x="810" dy="0">• Physics Δt: 1ms</tspan>
+                    <tspan x="810" dy="16">• Control Δt: 20ms</tspan>
+                    <tspan x="810" dy="16">• RK4 integration</tspan>
+                </text>
+            </g>
+
+            <!-- Legend -->
+            <g id="legend">
+                <text x="50" y="590" font-size="11" fill="#666">
+                    <tspan font-weight="bold">Legend:</tspan>
+                    <tspan x="150" fill="#1976D2">● Forward data flow</tspan>
+                    <tspan x="350" fill="#D32F2F">● Feedback loops</tspan>
+                </text>
+            </g>
+        </svg>
+    </div>
+
+    <script>
+        // Instructions for saving
+        console.log("To save as image:");
+        console.log("1. Right-click on the diagram");
+        console.log("2. Select 'Save image as...' or 'Copy image'");
+        console.log("3. Or use browser's print function and save as PDF");
+        console.log("\nFor highest quality:");
+        console.log("- Press Ctrl+P (Print)");
+        console.log("- Select 'Save as PDF'");
+        console.log("- Save as 'system_architecture.pdf'");
+    </script>
+</body>
+</html>

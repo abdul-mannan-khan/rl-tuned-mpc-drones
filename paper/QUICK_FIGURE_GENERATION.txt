@@ -1,0 +1,64 @@
+================================================================================
+QUICK FIGURE GENERATION - 3 SIMPLE STEPS
+================================================================================
+
+STEP 1: Open PlantUML Web Editor
+---------------------------------
+Browser → https://www.plantuml.com/plantuml/uml/
+
+
+STEP 2: Generate Each Figure (repeat 3 times)
+----------------------------------------------
+For Figure 2:
+  1. Open: D:\rl_tuned_mpc\paper\figure_2_architecture.puml
+  2. Copy ALL (Ctrl+A, Ctrl+C)
+  3. Paste into web editor
+  4. Wait 3 seconds
+  5. Right-click diagram → "Save image as..."
+  6. Save as: D:\rl_tuned_mpc\paper\figures\system_architecture.png
+
+For Figure 3:
+  1. Open: D:\rl_tuned_mpc\paper\figure_3_transfer.puml
+  2. Copy ALL (Ctrl+A, Ctrl+C)
+  3. Paste into web editor (replace previous)
+  4. Wait 3 seconds
+  5. Save as: D:\rl_tuned_mpc\paper\figures\transfer_learning_flow.png
+
+For Figure 4:
+  1. Open: D:\rl_tuned_mpc\paper\figure_4_pybullet.puml
+  2. Copy ALL (Ctrl+A, Ctrl+C)
+  3. Paste into web editor (replace previous)
+  4. Wait 3 seconds
+  5. Save as: D:\rl_tuned_mpc\paper\figures\pybullet_environment.png
+
+
+STEP 3: Verify Files
+---------------------
+Check that these 4 files exist in D:\rl_tuned_mpc\paper\figures\:
+  ✓ training_results.png (already exists)
+  ✓ system_architecture.png (NEW)
+  ✓ transfer_learning_flow.png (NEW)
+  ✓ pybullet_environment.png (NEW)
+
+
+OPTIONAL: Convert PNG to PDF (for higher quality)
+--------------------------------------------------
+If you want PDF instead of PNG:
+  1. In PlantUML editor, click "PNG" dropdown → Select "SVG"
+  2. Download SVG file
+  3. Go to: https://cloudconvert.com/svg-to-pdf
+  4. Upload SVG → Download PDF
+  5. Rename to match (.pdf instead of .svg)
+
+
+TOTAL TIME: ~10 minutes for all 3 figures
+================================================================================
+
+READY TO SUBMIT:
+  - 4 figures generated
+  - main.tex ready (7 pages)
+  - references.bib ready (15 citations)
+  - Upload all to Overleaf
+  - Compile and download final PDF
+
+================================================================================
