@@ -1,0 +1,111 @@
+<?xml version="1.0" ?>
+
+<robot name="racing">
+
+  <!-- Racing Drone (5-inch): 800g, high-power motors, aggressive flight characteristics -->
+  <properties
+    arm="0.11"
+    kf="1.5e-8"
+    km="2.4e-10"
+    thrust2weight="3.06"
+    max_speed_kmh="90"
+    gnd_eff_coeff="8.5"
+    prop_radius="6.35e-2"
+    drag_coeff_xy="1.8e-6"
+    drag_coeff_z="2.1e-6"
+    dw_coeff_1="1500.0"
+    dw_coeff_2="0.12"
+    dw_coeff_3="-0.08" />
+
+  <link name="base_link">
+
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <mass value="0.800"/>
+      <!-- Scaled inertia for larger, more distributed mass -->
+      <inertia ixx="6.5e-4" ixy="0.0" ixz="0.0" iyy="6.5e-4" iyz="0.0" izz="1.2e-3"/>
+    </inertial>
+
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <!-- Larger frame for 5-inch racing drone -->
+        <box size="0.22 0.22 0.04"/>
+      </geometry>
+      <material name="orange">
+        <color rgba="1.0 0.5 0.0 1"/>
+      </material>
+    </visual>
+
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <!-- Larger collision geometry -->
+        <cylinder radius="0.12" length="0.04"/>
+      </geometry>
+    </collision>
+
+  </link>
+
+  <!-- Motor positions for X-configuration -->
+  <link name="prop0_link">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.078 -0.078 0"/>
+      <mass value="0"/>
+      <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+    </inertial>
+  </link>
+  <joint name="prop0_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="prop0_link"/>
+  </joint>
+
+  <link name="prop1_link">
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.078 -0.078 0"/>
+      <mass value="0"/>
+      <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+    </inertial>
+  </link>
+  <joint name="prop1_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="prop1_link"/>
+  </joint>
+
+  <link name="prop2_link">
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.078 0.078 0"/>
+      <mass value="0"/>
+      <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+    </inertial>
+  </link>
+  <joint name="prop2_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="prop2_link"/>
+  </joint>
+
+  <link name="prop3_link">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.078 0.078 0"/>
+      <mass value="0"/>
+      <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+    </inertial>
+  </link>
+  <joint name="prop3_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="prop3_link"/>
+  </joint>
+
+  <link name="center_of_mass_link">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <mass value="0"/>
+      <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+    </inertial>
+  </link>
+  <joint name="center_of_mass_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="center_of_mass_link"/>
+  </joint>
+
+</robot>

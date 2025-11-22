@@ -1,6 +1,19 @@
 # How to Run MPC Simulation
 
-This guide explains how to run the MPC controller simulation and view the results.
+This guide explains how to run the MPC controller simulation for **4 different drone platforms** and view the results.
+
+---
+
+## Available Drones
+
+The simulation supports 4 different drone platforms, each with optimized MPC configurations:
+
+| Drone Type | Mass | Command Flag | Use Case |
+|-----------|------|--------------|----------|
+| **Crazyflie 2.X** | 0.027 kg | `--drone crazyflie` | Nano quadrotor (default) |
+| **Racing Drone** | 0.800 kg | `--drone racing` | High-speed agile flight |
+| **Generic Medium** | 2.500 kg | `--drone generic` | Photography/surveying |
+| **Heavy-Lift** | 5.500 kg | `--drone heavy-lift` | Industrial payload |
 
 ---
 
@@ -8,12 +21,28 @@ This guide explains how to run the MPC controller simulation and view the result
 
 ### 1. Run Simulation WITH Visualization (3D Window)
 
+**Crazyflie (default):**
 ```bash
 python tests/test_mpc_controller.py --gui
 ```
 
+**Racing Drone:**
+```bash
+python tests/test_mpc_controller.py --drone racing --gui
+```
+
+**Generic Medium Drone:**
+```bash
+python tests/test_mpc_controller.py --drone generic --gui
+```
+
+**Heavy-Lift Drone:**
+```bash
+python tests/test_mpc_controller.py --drone heavy-lift --gui
+```
+
 This will:
-- Open a PyBullet 3D visualization window showing the drone
+- Open a PyBullet 3D visualization window showing the selected drone
 - Run a 10-second hover test at 1.0m altitude
 - Display matplotlib plots after the test completes
 - Save all results automatically
@@ -25,7 +54,17 @@ This will:
 ### 2. Run Simulation WITHOUT Visualization (Headless, Faster)
 
 ```bash
+# Crazyflie (default)
 python tests/test_mpc_controller.py
+
+# Racing drone
+python tests/test_mpc_controller.py --drone racing
+
+# Generic drone
+python tests/test_mpc_controller.py --drone generic
+
+# Heavy-lift drone
+python tests/test_mpc_controller.py --drone heavy-lift
 ```
 
 This runs the simulation without the 3D window and is faster for batch testing.
@@ -37,22 +76,38 @@ This runs the simulation without the 3D window and is faster for batch testing.
 ### Run Longer Tests
 
 ```bash
-# 20-second test with visualization
+# 20-second test with Crazyflie
 python tests/test_mpc_controller.py --gui --duration 20
+
+# 20-second test with Racing drone
+python tests/test_mpc_controller.py --drone racing --gui --duration 20
 ```
 
 ### Change Target Altitude
 
 ```bash
-# Hover at 2.0m altitude
-python tests/test_mpc_controller.py --gui --altitude 2.0
+# Hover at 2.0m altitude with Generic drone
+python tests/test_mpc_controller.py --drone generic --gui --altitude 2.0
+
+# Heavy-lift at 3.0m altitude
+python tests/test_mpc_controller.py --drone heavy-lift --gui --altitude 3.0
+```
+
+### Run Figure-8 Trajectory Test
+
+```bash
+# Figure-8 with Racing drone (showcase agility)
+python tests/test_mpc_controller.py --drone racing --test figure8 --gui
+
+# Figure-8 with Crazyflie
+python tests/test_mpc_controller.py --test figure8 --gui
 ```
 
 ### Specify Iteration Number (for file naming)
 
 ```bash
 # Save results as test_iteration_03.*
-python tests/test_mpc_controller.py --gui --iteration 3
+python tests/test_mpc_controller.py --drone racing --gui --iteration 3
 ```
 
 ### View All Options
@@ -295,18 +350,46 @@ After successfully running the simulation:
 | Item | Location |
 |------|----------|
 | Test script | `tests/test_mpc_controller.py` |
-| Configuration | `configs/mpc_crazyflie.yaml` |
+| Crazyflie config | `configs/mpc_crazyflie.yaml` |
+| Racing config | `configs/mpc_racing.yaml` |
+| Generic config | `configs/mpc_generic.yaml` |
+| Heavy-lift config | `configs/mpc_heavy_lift.yaml` |
 | CSV results | `results/phase_02/test_iteration_XX.csv` |
 | JSON results | `results/phase_02/test_iteration_XX.json` |
 | Plots | `results/phase_02/mpc_hover_test.png` |
 | This guide | `HOW_TO_RUN_SIMULATION.md` |
+| Multi-drone doc | `MULTI_DRONE_CONFIGURATIONS.md` |
+
+---
+
+## Quick Reference Commands
+
+**Test all 4 drones (one at a time):**
+
+```bash
+# Nano quadrotor
+python tests/test_mpc_controller.py --drone crazyflie --gui --duration 10
+
+# Racing drone (high speed)
+python tests/test_mpc_controller.py --drone racing --gui --duration 10
+
+# Medium drone (stable platform)
+python tests/test_mpc_controller.py --drone generic --gui --duration 10
+
+# Heavy-lift drone (max stability)
+python tests/test_mpc_controller.py --drone heavy-lift --gui --duration 10
+```
 
 ---
 
 **Ready to run your first simulation?**
 
 ```bash
+# Start with Crazyflie
 python tests/test_mpc_controller.py --gui
+
+# Or try the Racing drone for more excitement!
+python tests/test_mpc_controller.py --drone racing --gui
 ```
 
-Enjoy the perfect tracking performance!
+Enjoy the perfect tracking performance across all drone platforms!

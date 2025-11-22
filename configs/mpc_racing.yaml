@@ -1,0 +1,123 @@
+# MPC Configuration for Racing Drone
+# Author: Dr. Abdul Manan Khan
+# Project: RL-Enhanced MPC for Multi-Drone Systems
+
+mpc:
+  prediction_horizon: 20    # N (number of steps to look ahead)
+  control_horizon: 20       # Same as prediction horizon
+  timestep: 0.020833        # dt = 0.020833s (48 Hz control frequency)
+
+  # Weight matrices (Conservative tuning for stability and tracking)
+  # Racing drone: Prioritize tracking and stability over aggressive maneuvers
+  # Focus on solver convergence and smooth control
+  # State cost matrix Q: [px, py, pz, vx, vy, vz, roll, pitch, yaw, p, q, r]
+  Q: [
+    100.0,  # px - position x: high priority for trajectory tracking
+    100.0,  # py - position y: match position tracking importance
+    5000.0, # pz - EXTREME altitude cost to prevent ground crashes (was 150)
+    15.0,   # vx - velocity x: smooth velocity tracking
+    15.0,   # vy - velocity y: prevent rapid velocity changes
+    25.0,   # vz - velocity z: tighter vertical velocity control
+    1000.0, # roll: MASSIVE cost to prevent flipping
+    1000.0, # pitch: MASSIVE cost to prevent flipping
+    25.0,   # yaw: heading stability
+    5.0,    # p - roll rate: sufficient damping without excess
+    5.0,    # q - pitch rate: prevent oscillations
+    5.0     # r - yaw rate: smooth yaw control
+  ]
+
+  # Terminal cost matrix Q_terminal (5x Q for final convergence)
+  Q_terminal: [
+    500.0,   # px (5 × 100)
+    500.0,   # py
+    25000.0, # pz (5 × 5000) - extreme altitude cost
+    75.0,    # vx (5 × 15)
+    75.0,    # vy
+    125.0,   # vz (5 × 25)
+    5000.0,  # roll (5 × 1000) - massive cost to prevent flipping
+    5000.0,  # pitch (5 × 1000)
+    125.0,   # yaw (5 × 25)
+    25.0,    # p (5 × 5)
+    25.0,    # q
+    25.0     # r
+  ]
+
+  # Control cost matrix R: [thrust, roll_rate_cmd, pitch_rate_cmd, yaw_rate_cmd]
+  # Moderate control costs to allow sufficient control authority
+  R: [
+    0.1,    # thrust (low cost to allow responsive altitude control)
+    1.0,    # roll rate command (allow agile maneuvering)
+    1.0,    # pitch rate command
+    1.5     # yaw rate command (slightly higher - yaw less critical)
+  ]
+
+  # Control constraints
+  # Thrust in Newtons, angular rates in rad/s
+  # Racing drone: mass=0.8kg, hover_thrust (level) = m*g = 0.8*9.81 = 7.85N
+  # u_min set to EXACTLY hover thrust - MPC cannot command less
+  # Min thrust: 7.85N (EXACTLY hover for 0.8kg drone), Max: 2.5× hover (20N)
+  u_min: [7.85, -6.0, -6.0, -4.0]  # [thrust_min, ang_vel_min x3]
+  u_max: [20.0, 6.0, 6.0, 4.0]   # Racing drone - high performance limits
+
+# Drone physical parameters (5-inch Racing Drone specifications)
+drone:
+  name: "Racing Drone (5-inch)"
+  mass: 0.800  # kg (800 grams with battery)
+
+  # Moments of inertia (kg·m²)
+  # Scaled from Crazyflie based on mass and size ratio
+  inertia:
+    Ixx: 6.5e-4   # ~46x larger than Crazyflie (mass ratio ~30x, size ~1.5x)
+    Iyy: 6.5e-4
+    Izz: 1.2e-3
+
+  # Geometric parameters
+  arm_length: 0.11  # m (5-inch props, ~110mm frame)
+  configuration: "X"   # X-configuration quadrotor
+
+  # Motor parameters (typical 2207 2400KV motors)
+  max_rpm: 35000       # Maximum motor RPM (racing motors)
+  min_rpm: 0
+  motor_constant: 1.5e-8  # Thrust coefficient (higher power)
+
+  # Physical limits
+  max_thrust: 24.0     # N (total, all 4 motors) - ~3:1 thrust-to-weight
+  max_ang_vel: 8.0     # rad/s (~458 deg/s - racing capability)
+
+  # Operating envelope
+  max_tilt_angle: 1.22  # rad (~70 degrees - aggressive racing angles)
+  max_velocity: 25.0    # m/s (~90 km/h racing speed)
+  max_altitude: 100.0   # m (outdoor racing)
+
+# Simulation parameters
+simulation:
+  physics_freq_hz: 240  # PyBullet physics update rate
+  control_freq_hz: 48   # MPC control update rate (240/48 = 5)
+  gui: false            # Set to true for visualization
+
+# Initial conditions (for testing)
+initial_state:
+  position: [0.0, 0.0, 1.5]     # [x, y, z] in meters (higher starting altitude)
+  velocity: [0.0, 0.0, 0.0]     # [vx, vy, vz] in m/s
+  orientation: [0.0, 0.0, 0.0]  # [roll, pitch, yaw] in radians
+  ang_velocity: [0.0, 0.0, 0.0] # [p, q, r] in rad/s
+
+# Reference trajectory parameters
+trajectory:
+  type: "waypoint"  # Options: hover, waypoint, circle, lemniscate
+  waypoints: [
+    [0.0, 0.0, 1.5],   # Start at 1.5m altitude
+    [3.0, 0.0, 2.0],   # Aggressive forward movement
+    [3.0, 3.0, 2.5],   # High-speed turn
+    [0.0, 3.0, 2.0],   # Another aggressive segment
+    [0.0, 0.0, 1.5]    # Return to start
+  ]
+  hover_time: 1.0      # Time to hover at each waypoint (seconds) - shorter for racing
+  transition_time: 2.0  # Time to move between waypoints - faster transitions
+
+# Performance metrics (Phase 5 targets - conservative baseline before RL tuning)
+metrics:
+  position_rmse_threshold: 3.5   # m (Phase 5: figure-8 < 3.5m - will improve with RL)
+  velocity_rmse_threshold: 1.0   # m/s (smooth flight)
+  angle_rmse_threshold: 0.5      # rad (~30 degrees - allow moderate tilting)
+  max_solve_time: 50.0           # ms (Phase 5: < 50ms for real-time feasibility)
