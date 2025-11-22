@@ -17,7 +17,18 @@
       "Bash(git push:*)",
       "Bash(git commit:*)",
       "Bash(tee:*)",
-      "Bash(timeout:*)"
+      "Bash(timeout:*)",
+      "Bash(tasklist:*)",
+      "Bash(echo:*)",
+      "Bash(ls:*)",
+      "Bash(for:*)",
+      "Bash(do echo \"=== Iteration $i ===\")",
+      "Bash(done)",
+      "Bash(taskkill:*)",
+      "Bash(nul)",
+      "Bash(cat:*)",
+      "Bash(do echo \"=== Testing $drone ===\")",
+      "Bash(do rm -f test_iteration_$i.json test_iteration_$i.csv)"
     ],
     "deny": [],
     "ask": []

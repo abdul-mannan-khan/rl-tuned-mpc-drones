@@ -1,0 +1,122 @@
+# MPC Configuration for Heavy-Lift Drone
+# Author: Dr. Abdul Manan Khan
+# Project: RL-Enhanced MPC for Multi-Drone Systems
+
+mpc:
+  prediction_horizon: 20    # N (number of steps to look ahead)
+  control_horizon: 20       # Same as prediction horizon
+  timestep: 0.020833        # dt = 0.020833s (48 Hz control frequency)
+
+  # Weight matrices (Based on successful Racing drone config)
+  # Heavy-lift drone: Uses proven Racing config with slight adjustments for payload
+  # Conservative tuning prevents payload oscillation
+  # State cost matrix Q: [px, py, pz, vx, vy, vz, roll, pitch, yaw, p, q, r]
+  Q: [
+    100.0,  # px - position x: matched to Racing for stability
+    100.0,  # py - position y
+    150.0,  # pz - position z: critical altitude control
+    15.0,   # vx - velocity x: matched to Racing
+    15.0,   # vy - velocity y
+    25.0,   # vz - velocity z: controlled vertical motion
+    40.0,   # roll: matched to Racing for proven stability
+    40.0,   # pitch
+    25.0,   # yaw: heading stability
+    5.0,    # p - roll rate: proven Racing config (reduced from 8.0)
+    5.0,    # q - pitch rate
+    5.0     # r - yaw rate
+  ]
+
+  # Terminal cost matrix Q_terminal (5x Q for final convergence)
+  Q_terminal: [
+    500.0,  # px (5 × 100)
+    500.0,  # py
+    750.0,  # pz (5 × 150)
+    75.0,   # vx (5 × 15)
+    75.0,   # vy
+    125.0,  # vz (5 × 25)
+    200.0,  # roll (5 × 40)
+    200.0,  # pitch
+    125.0,  # yaw (5 × 25)
+    25.0,   # p (5 × 5)
+    25.0,   # q
+    25.0    # r
+  ]
+
+  # Control cost matrix R: [thrust, roll_rate_cmd, pitch_rate_cmd, yaw_rate_cmd]
+  # Moderate control costs balancing smoothness with control authority
+  R: [
+    0.2,    # thrust (allow responsive altitude control for heavy payload)
+    1.5,    # roll rate command (smooth but controlled maneuvering)
+    1.5,    # pitch rate command
+    2.0     # yaw rate command (higher for stability with payload)
+  ]
+
+  # Control constraints
+  # Thrust in Newtons, angular rates in rad/s
+  # Heavy-lift: mass=5.5kg, hover_thrust = m*g = 5.5*9.81 = 54N
+  # Min thrust: 70% of hover (38N) for heavy payload, Max: 1.8× hover (100N)
+  u_min: [38.0, -3.0, -3.0, -2.0]  # [thrust_min, ang_vel_min x3]
+  u_max: [100.0, 3.0, 3.0, 2.0]   # Heavy-lift drone - high thrust, limited agility
+
+# Drone physical parameters (Industrial Heavy-Lift specifications)
+drone:
+  name: "Heavy-Lift Industrial Drone"
+  mass: 5.500  # kg (5.5 kg with battery, before payload)
+
+  # Moments of inertia (kg·m²)
+  # Large platform with distributed mass
+  inertia:
+    Ixx: 1.2e-2   # ~200x larger than Crazyflie
+    Iyy: 1.2e-2
+    Izz: 2.0e-2
+
+  # Geometric parameters
+  arm_length: 0.35  # m (700mm frame - large industrial platform)
+  configuration: "X"   # X-configuration quadrotor
+
+  # Motor parameters (large brushless motors, e.g., 4108 380KV)
+  max_rpm: 8000        # Maximum motor RPM (large props, low KV)
+  min_rpm: 0
+  motor_constant: 1.2e-7  # Thrust coefficient (very large props)
+
+  # Physical limits
+  max_thrust: 110.0    # N (total, all 4 motors) - ~2:1 thrust-to-weight
+  max_ang_vel: 3.0     # rad/s (~172 deg/s - limited agility)
+
+  # Operating envelope
+  max_tilt_angle: 0.35  # rad (~20 degrees - very stable for payload)
+  max_velocity: 12.0    # m/s (~43 km/h conservative speed)
+  max_altitude: 150.0   # m (industrial operations)
+
+# Simulation parameters
+simulation:
+  physics_freq_hz: 240  # PyBullet physics update rate
+  control_freq_hz: 48   # MPC control update rate (240/48 = 5)
+  gui: false            # Set to true for visualization
+
+# Initial conditions (for testing)
+initial_state:
+  position: [0.0, 0.0, 2.5]     # [x, y, z] in meters (higher for safety)
+  velocity: [0.0, 0.0, 0.0]     # [vx, vy, vz] in m/s
+  orientation: [0.0, 0.0, 0.0]  # [roll, pitch, yaw] in radians
+  ang_velocity: [0.0, 0.0, 0.0] # [p, q, r] in rad/s
+
+# Reference trajectory parameters
+trajectory:
+  type: "waypoint"  # Options: hover, waypoint, circle, lemniscate
+  waypoints: [
+    [0.0, 0.0, 2.5],   # Start at 2.5m altitude
+    [1.5, 0.0, 3.0],   # Slow, deliberate movements
+    [1.5, 1.5, 3.0],   # Maintain altitude
+    [0.0, 1.5, 2.5],   # Gentle descent
+    [0.0, 0.0, 2.5]    # Return to start
+  ]
+  hover_time: 3.0      # Time to hover at each waypoint (seconds) - stable positioning
+  transition_time: 5.0  # Time to move between waypoints - very smooth transitions
+
+# Performance metrics (Phase 5 targets - manual Bryson tuning)
+metrics:
+  position_rmse_threshold: 4.0   # m (Phase 5: circular < 3.0m → figure-8 < 4.0m for heavy drone)
+  velocity_rmse_threshold: 0.6   # m/s (smooth operation)
+  angle_rmse_threshold: 0.25     # rad (~14 degrees - stable but allow tilt)
+  max_solve_time: 50.0           # ms (Phase 5: < 50ms for real-time)

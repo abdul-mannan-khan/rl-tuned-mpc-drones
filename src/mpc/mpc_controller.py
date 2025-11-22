@@ -236,7 +236,7 @@ class MPCController:
         opts = {
             'ipopt.print_level': 0,          # Suppress IPOPT output
             'print_time': 0,                 # Don't print solve time
-            'ipopt.max_iter': 100,           # Maximum iterations
+            'ipopt.max_iter': 200,           # Maximum iterations (increased for aggressive trajectories)
             'ipopt.tol': 1e-6,               # Convergence tolerance
             'ipopt.acceptable_tol': 1e-4,    # Acceptable solution tolerance
             'ipopt.warm_start_init_point': 'yes'  # Use warm start

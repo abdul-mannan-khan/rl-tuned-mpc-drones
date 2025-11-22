@@ -1,0 +1,122 @@
+# MPC Configuration for Generic Medium Drone
+# Author: Dr. Abdul Manan Khan
+# Project: RL-Enhanced MPC for Multi-Drone Systems
+
+mpc:
+  prediction_horizon: 20    # N (number of steps to look ahead)
+  control_horizon: 20       # Same as prediction horizon
+  timestep: 0.020833        # dt = 0.020833s (48 Hz control frequency)
+
+  # Weight matrices (Matched to successful Racing drone config)
+  # Generic drone: Balanced performance for photography/surveying
+  # Uses proven Racing config as baseline for stability
+  # State cost matrix Q: [px, py, pz, vx, vy, vz, roll, pitch, yaw, p, q, r]
+  Q: [
+    100.0,  # px - position x: high priority for trajectory tracking
+    100.0,  # py - position y: maintain position precision
+    150.0,  # pz - position z: critical altitude stability
+    15.0,   # vx - velocity x: smooth motion (matched to Racing)
+    15.0,   # vy - velocity y
+    25.0,   # vz - velocity z: controlled vertical motion
+    40.0,   # roll: matched to Racing for proven stability
+    40.0,   # pitch
+    25.0,   # yaw: heading stability
+    5.0,    # p - roll rate: proven Racing config value
+    5.0,    # q - pitch rate
+    5.0     # r - yaw rate
+  ]
+
+  # Terminal cost matrix Q_terminal (5x Q for final convergence)
+  Q_terminal: [
+    500.0,  # px (5 × 100)
+    500.0,  # py
+    750.0,  # pz (5 × 150)
+    75.0,   # vx (5 × 15)
+    75.0,   # vy
+    125.0,  # vz (5 × 25)
+    200.0,  # roll (5 × 40)
+    200.0,  # pitch
+    125.0,  # yaw (5 × 25)
+    25.0,   # p (5 × 5)
+    25.0,   # q
+    25.0    # r
+  ]
+
+  # Control cost matrix R: [thrust, roll_rate_cmd, pitch_rate_cmd, yaw_rate_cmd]
+  # Moderate control costs to allow sufficient control authority
+  R: [
+    0.1,    # thrust (low cost for responsive altitude control)
+    1.0,    # roll rate command (allow smooth maneuvering)
+    1.0,    # pitch rate command
+    1.5     # yaw rate command (slightly higher for heading stability)
+  ]
+
+  # Control constraints
+  # Thrust in Newtons, angular rates in rad/s
+  # Generic drone: mass=2.5kg, hover_thrust = m*g = 2.5*9.81 = 24.5N
+  # Min thrust: 60% of hover (15N) for stability, Max: 1.8× hover (45N)
+  u_min: [15.0, -4.0, -4.0, -3.0]  # [thrust_min, ang_vel_min x3]
+  u_max: [45.0, 4.0, 4.0, 3.0]    # Generic medium drone limits
+
+# Drone physical parameters (DJI Phantom-like specifications)
+drone:
+  name: "Generic Medium Drone"
+  mass: 2.500  # kg (2.5 kg with battery and payload)
+
+  # Moments of inertia (kg·m²)
+  # Scaled based on mass (~93x Crazyflie) and size ratio
+  inertia:
+    Ixx: 3.5e-3   # Larger platform, more distributed mass
+    Iyy: 3.5e-3
+    Izz: 6.0e-3
+
+  # Geometric parameters
+  arm_length: 0.175  # m (350mm frame - typical for mid-size drones)
+  configuration: "X"   # X-configuration quadrotor
+
+  # Motor parameters (typical 2212 920KV motors)
+  max_rpm: 12000       # Maximum motor RPM (efficiency-focused)
+  min_rpm: 0
+  motor_constant: 4.5e-8  # Thrust coefficient (larger props)
+
+  # Physical limits
+  max_thrust: 50.0     # N (total, all 4 motors) - ~2:1 thrust-to-weight
+  max_ang_vel: 4.0     # rad/s (~229 deg/s - moderate agility)
+
+  # Operating envelope
+  max_tilt_angle: 0.52  # rad (~30 degrees - stable operation)
+  max_velocity: 15.0    # m/s (~54 km/h typical cruise)
+  max_altitude: 120.0   # m (regulatory limit in many countries)
+
+# Simulation parameters
+simulation:
+  physics_freq_hz: 240  # PyBullet physics update rate
+  control_freq_hz: 48   # MPC control update rate (240/48 = 5)
+  gui: false            # Set to true for visualization
+
+# Initial conditions (for testing)
+initial_state:
+  position: [0.0, 0.0, 2.0]     # [x, y, z] in meters
+  velocity: [0.0, 0.0, 0.0]     # [vx, vy, vz] in m/s
+  orientation: [0.0, 0.0, 0.0]  # [roll, pitch, yaw] in radians
+  ang_velocity: [0.0, 0.0, 0.0] # [p, q, r] in rad/s
+
+# Reference trajectory parameters
+trajectory:
+  type: "waypoint"  # Options: hover, waypoint, circle, lemniscate
+  waypoints: [
+    [0.0, 0.0, 2.0],   # Start at 2m altitude
+    [2.0, 0.0, 2.5],   # Moderate movements for surveying
+    [2.0, 2.0, 3.0],   # Altitude change
+    [0.0, 2.0, 2.5],   # Survey pattern
+    [0.0, 0.0, 2.0]    # Return to start
+  ]
+  hover_time: 2.5      # Time to hover at each waypoint (seconds) - stable for imaging
+  transition_time: 4.0  # Time to move between waypoints - smooth transitions
+
+# Performance metrics (Phase 5 targets - manual Bryson tuning)
+metrics:
+  position_rmse_threshold: 3.0   # m (Phase 5: circular < 3.0m → figure-8 < 3.5m)
+  velocity_rmse_threshold: 0.8   # m/s (smooth flight)
+  angle_rmse_threshold: 0.3      # rad (~17 degrees - moderate)
+  max_solve_time: 50.0           # ms (Phase 5: < 50ms for real-time)

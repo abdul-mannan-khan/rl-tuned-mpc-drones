@@ -1,29 +1,29 @@
 {
-  "iteration": 2,
-  "date": "2025-11-21 11:07:58",
+  "iteration": 100,
+  "date": "2025-11-22 12:17:46",
   "test_name": "MPC Hover Test",
   "configuration": {
     "mpc_horizon": 20,
     "timestep": 0.020833,
     "Q_weights": [
-      80.0,
-      80.0,
       100.0,
+      100.0,
+      5000.0,
+      15.0,
+      15.0,
+      25.0,
+      1000.0,
+      1000.0,
+      25.0,
       5.0,
       5.0,
-      10.0,
-      30.0,
-      30.0,
-      20.0,
-      0.5,
-      0.5,
-      0.5
+      5.0
     ],
     "R_weights": [
-      0.05,
-      0.5,
-      0.5,
-      0.8
+      0.1,
+      1.0,
+      1.0,
+      1.5
     ],
     "control_frequency_hz": 48,
     "physics_frequency_hz": 240
@@ -38,25 +38,25 @@
   },
   "results": {
     "position_tracking": {
-      "max_error_m": 5.4090498801521365,
-      "rmse_m": 4.75730159420896,
-      "final_error_m": 5.020578539935429,
+      "max_error_m": 406.3997716230593,
+      "rmse_m": 229.81395306654883,
+      "final_error_m": 406.3997716230593,
       "status": "FAIL"
     },
     "mpc_performance": {
-      "avg_solve_time_ms": 182.0959796766585,
-      "max_solve_time_ms": 1220.6521034240723,
-      "success_rate_percent": 91.25910509885536
+      "avg_solve_time_ms": 104.64898096730965,
+      "max_solve_time_ms": 357.12146759033203,
+      "success_rate_percent": 100.0
     },
     "simulation": {
-      "real_time_seconds": 177.20235514640808,
-      "simulated_time_seconds": 20.0,
-      "real_time_factor": 0.11286531707479625
+      "real_time_seconds": 127.85683345794678,
+      "simulated_time_seconds": 25.0,
+      "real_time_factor": 0.19553119941940933
     }
   },
   "pass_criteria": {
     "position_rmse_target_m": 0.1,
-    "position_rmse_achieved_m": 4.75730159420896,
+    "position_rmse_achieved_m": 229.81395306654883,
     "passed": false
   },
   "notes": "MPC figure-8 trajectory tracking test at z=1.0m"
