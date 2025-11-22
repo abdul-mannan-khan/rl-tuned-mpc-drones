@@ -20,7 +20,7 @@ def test_environment_creation():
     """Test environment can be created"""
     print("Testing environment creation...")
     env = MPCTuningEnv(platform='crazyflie', trajectory_type='circular', gui=False)
-    print(f"  ✓ Environment created successfully")
+    print(f"  [OK] Environment created successfully")
     print(f"  - Observation space: {env.observation_space}")
     print(f"  - Action space: {env.action_space}")
     env.close()
@@ -32,7 +32,7 @@ def test_environment_reset():
     print("\nTesting environment reset...")
     env = MPCTuningEnv(platform='crazyflie', trajectory_type='circular', gui=False)
     obs, info = env.reset()
-    print(f"  ✓ Environment reset successfully")
+    print(f"  [OK] Environment reset successfully")
     print(f"  - Observation shape: {obs.shape}")
     print(f"  - Observation dtype: {obs.dtype}")
     print(f"  - Info keys: {list(info.keys())}")
@@ -51,7 +51,7 @@ def test_environment_step():
 
     obs_new, reward, terminated, truncated, info = env.step(action)
 
-    print(f"  ✓ Environment step successful")
+    print(f"  [OK] Environment step successful")
     print(f"  - New observation shape: {obs_new.shape}")
     print(f"  - Reward: {reward:.4f}")
     print(f"  - Terminated: {terminated}")
@@ -86,7 +86,7 @@ def test_episode_rollout():
     mean_reward = np.mean(episode_rewards)
     mean_error = np.mean(episode_errors)
 
-    print(f"  ✓ Episode completed")
+    print(f"  [OK] Episode completed")
     print(f"  - Steps: {len(episode_rewards)}")
     print(f"  - Mean reward: {mean_reward:.4f}")
     print(f"  - Mean position error: {mean_error:.4f} m")
@@ -100,7 +100,7 @@ def test_bryson_initialization():
     print("\nTesting Bryson's Rule initialization...")
     env = MPCTuningEnv(platform='crazyflie', trajectory_type='circular', gui=False)
 
-    print(f"  ✓ Bryson's Rule weights computed")
+    print(f"  [OK] Bryson's Rule weights computed")
     print(f"  - Q_bryson shape: {env.Q_bryson.shape}")
     print(f"  - Q_bryson values: {env.Q_bryson}")
     print(f"  - R_bryson shape: {env.R_bryson.shape}")
@@ -130,7 +130,7 @@ def main():
             result = test()
             results.append(result)
         except Exception as e:
-            print(f"  ✗ Test failed with error: {e}")
+            print(f"  [FAIL] Test failed with error: {e}")
             import traceback
             traceback.print_exc()
             results.append(False)
@@ -140,10 +140,10 @@ def main():
     print("="*70)
 
     if all(results):
-        print("\n✓ All tests passed! Environment is ready for training.")
+        print("\n[OK] All tests passed! Environment is ready for training.")
         return 0
     else:
-        print("\n✗ Some tests failed. Please fix errors before training.")
+        print("\n[FAIL] Some tests failed. Please fix errors before training.")
         return 1
 
 

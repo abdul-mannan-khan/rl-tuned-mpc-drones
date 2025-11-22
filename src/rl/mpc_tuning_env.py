@@ -76,7 +76,17 @@ class MPCTuningEnv(gym.Env):
         # Drone model (using CF2X as per Phase 5 findings)
         self.drone_model = DroneModel.CF2X
 
-        # Initialize PyBullet environment
+        # Simulation parameters (MUST be set before _init_simulation)
+        self.dt = self.mpc_config['mpc']['timestep']
+        self.control_freq_hz = self.mpc_config['simulation']['control_freq_hz']
+        self.physics_freq_hz = self.mpc_config['simulation']['physics_freq_hz']
+
+        # Trajectory parameters
+        self.traj_radius = 0.5  # meters
+        self.traj_period = 10.0  # seconds
+        self.hover_altitude = 1.0  # meters
+
+        # Initialize PyBullet environment (after parameters are set)
         self.sim_env = None
         self._init_simulation()
 
@@ -110,16 +120,6 @@ class MPCTuningEnv(gym.Env):
         self.episode_step = 0
         self.episode_errors = []
         self.episode_controls = []
-
-        # Simulation parameters
-        self.dt = self.mpc_config['mpc']['timestep']
-        self.control_freq_hz = self.mpc_config['simulation']['control_freq_hz']
-        self.physics_freq_hz = self.mpc_config['simulation']['physics_freq_hz']
-
-        # Trajectory parameters
-        self.traj_radius = 0.5  # meters
-        self.traj_period = 10.0  # seconds
-        self.hover_altitude = 1.0  # meters
 
     def _init_simulation(self):
         """Initialize PyBullet simulation environment"""
