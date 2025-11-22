@@ -121,6 +121,9 @@ class MPCTuningEnv(gym.Env):
         self.episode_errors = []
         self.episode_controls = []
 
+        # Track current observation (CtrlAviary doesn't have .last() method)
+        self.current_obs = None
+
     def _init_simulation(self):
         """Initialize PyBullet simulation environment"""
         initial_xyzs = np.array([[0.0, 0.0, 1.0]])  # Start at 1m altitude
@@ -225,7 +228,8 @@ class MPCTuningEnv(gym.Env):
 
         # Reset simulation
         self._init_simulation()
-        obs_sim, _ = self.sim_env.reset()
+        obs, _ = self.sim_env.reset()
+        self.current_obs = obs[0]  # Extract first drone's observation (shape: 1,20 -> 20)
 
         # Reset episode tracking
         self.episode_step = 0
@@ -264,8 +268,8 @@ class MPCTuningEnv(gym.Env):
         velocity_errors = []
         control_efforts = []
 
-        # Get current state from PyBullet
-        obs_sim, _, _, _, _ = self.sim_env.last()
+        # Get current state from PyBullet (use internally tracked observation)
+        obs_sim = self.current_obs
         state_current = self._obs_to_state(obs_sim)
 
         # Generate reference trajectory
@@ -274,22 +278,26 @@ class MPCTuningEnv(gym.Env):
 
         # Compute MPC control
         try:
-            u_opt, solve_info = self.mpc.solve(state_current, ref_traj)
+            u_opt, solve_time, success = self.mpc.compute_control(state_current, ref_traj)
 
-            if not solve_info['success']:
+            if not success:
                 # Penalize solver failure
                 return self._get_observation(), -100.0, True, False, {
                     'solver_failed': True,
                     'position_error': np.nan,
-                    'velocity_error': np.nan
+                    'velocity_error': np.nan,
+                    'solve_time_ms': solve_time
                 }
 
             # Apply control to simulation
             action_sim = self._mpc_to_sim_action(u_opt)
             obs_sim, _, _, _, _ = self.sim_env.step(action_sim)
 
+            # Update current observation (extract first drone)
+            self.current_obs = obs_sim[0]  # Shape: 1,20 -> 20
+
             # Compute tracking errors
-            state_new = self._obs_to_state(obs_sim)
+            state_new = self._obs_to_state(self.current_obs)
             pos_error = np.linalg.norm(state_new[:3] - ref_traj[:3, 0])
             vel_error = np.linalg.norm(state_new[3:6] - ref_traj[3:6, 0])
             control_effort = np.linalg.norm(u_opt)
@@ -331,7 +339,7 @@ class MPCTuningEnv(gym.Env):
             'position_error': np.mean(position_errors) if position_errors else 0.0,
             'velocity_error': np.mean(velocity_errors) if velocity_errors else 0.0,
             'control_effort': np.mean(control_efforts) if control_efforts else 0.0,
-            'solve_time_ms': solve_info.get('solve_time_ms', 0.0),
+            'solve_time_ms': solve_time if 'solve_time' in locals() else 0.0,
             'episode_step': self.episode_step
         }
 
@@ -395,12 +403,12 @@ class MPCTuningEnv(gym.Env):
          settling_time (1), overshoot (1)]
         """
         # Get current simulation state
-        try:
-            obs_sim, _, _, _, _ = self.sim_env.last()
-            state_current = self._obs_to_state(obs_sim)
-        except:
+        if self.current_obs is None:
             # If simulation not initialized, return zeros
             return np.zeros(29, dtype=np.float32)
+
+        obs_sim = self.current_obs
+        state_current = self._obs_to_state(obs_sim)
 
         # Get reference at current time
         t = self.episode_step * self.dt
@@ -456,7 +464,8 @@ class MPCTuningEnv(gym.Env):
         Returns:
             ref_traj: 12 x (N+1) reference trajectory matrix
         """
-        N = self.N_current
+        # Use fixed MPC horizon (CasADi MPC can't change N dynamically)
+        N = self.mpc_config['mpc']['prediction_horizon']
 
         if self.trajectory_type == 'circular':
             return self._circular_reference(t, self.traj_radius, self.traj_period, N)
