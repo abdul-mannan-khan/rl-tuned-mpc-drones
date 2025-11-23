@@ -226,8 +226,9 @@ class MPCTuningEnv(gym.Env):
         # Update MPC with initial weights
         self.mpc.update_weights(self.Q_current, self.R_current)
 
-        # Reset simulation
-        self._init_simulation()
+        # Reset simulation (reuse existing environment, don't create new one)
+        if self.sim_env is None:
+            self._init_simulation()
         obs, _ = self.sim_env.reset()
         self.current_obs = obs[0]  # Extract first drone's observation (shape: 1,20 -> 20)
 

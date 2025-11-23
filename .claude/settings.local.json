@@ -28,7 +28,8 @@
       "Bash(nul)",
       "Bash(cat:*)",
       "Bash(do echo \"=== Testing $drone ===\")",
-      "Bash(do rm -f test_iteration_$i.json test_iteration_$i.csv)"
+      "Bash(do rm -f test_iteration_$i.json test_iteration_$i.csv)",
+      "Bash(connections\" error during training.\n\nProblem:\n- reset() called _init_simulation() every time\n- Created new CtrlAviary (new PyBullet connection) each reset\n- Never closed old connections\n- PyBullet has max 128 connections, training hit limit after ~50 episodes\n\nSolution:\n- Only create CtrlAviary once (first reset)\n- Reuse existing environment on subsequent resets\n- Just call sim_env.reset() to reset state\n- Properly close connection in close() method (already implemented)\n\nChanges:\n- src/rl/mpc_tuning_env.py:230-231\n  Added: if self.sim_env is None: check before _init_simulation()\n  \nThis allows training to run indefinitely without connection leaks.\n\nTesting:\n- All environment tests pass\n- Training can now exceed 1,000+ steps without connection errors\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
     ],
     "deny": [],
     "ask": []
