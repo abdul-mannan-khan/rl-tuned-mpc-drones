@@ -313,6 +313,8 @@ class MPCTuningEnv(gym.Env):
 
         except Exception as e:
             print(f"MPC step failed: {e}")
+            import traceback
+            traceback.print_exc()
             return self._get_observation(), -100.0, True, False, {'error': str(e)}
 
         # Compute reward
@@ -572,7 +574,8 @@ class MPCTuningEnv(gym.Env):
         rpm_base = hover_rpm + (max_rpm - hover_rpm) * thrust_normalized
 
         # Equal distribution (simplified - would need mixer matrix)
-        action = np.array([rpm_base, rpm_base, rpm_base, rpm_base])
+        # CtrlAviary expects shape (NUM_DRONES, 4) = (1, 4) for single drone
+        action = np.array([[rpm_base, rpm_base, rpm_base, rpm_base]])
 
         return action
 
